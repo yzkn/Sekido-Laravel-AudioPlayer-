@@ -14,7 +14,16 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    You are logged in as a
+                    <span>
+                        @can('system-only') {{-- システム管理者権限のみに表示される --}}
+                        System Administrator
+                        @elsecan('admin-higher')　{{-- 管理者権限以上に表示される --}}
+                        Administrator
+                        @elsecan('user-higher') {{-- 一般権限以上に表示される --}}
+                        user
+                        @endcan
+                    </span>
                 </div>
             </div>
         </div>
