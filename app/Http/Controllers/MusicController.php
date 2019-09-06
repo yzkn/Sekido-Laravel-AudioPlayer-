@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Music;
+use Log;
 
 class MusicController extends Controller
 {
@@ -37,24 +38,24 @@ class MusicController extends Controller
      */
     public function store(Request $request)
     {
-        echo 'store';
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
             'audio' => 'mimes:mp3,mpga',
         ]);
-        echo 'validatedData';
 
-        if ($request->hasFile('audio')) { //"audio" は input type の name属性
-            echo 'audio';
-
-            if ($request->file('audio')->isValid()) { //"audio" は input type の name属性
-                echo 'isValid';
-                echo $request->file('audio')->guessExtension();
-
+        if ($request->hasFile('audio')) {
+            if ($request->file('audio')->isValid()) {
                 $path = $request->file('audio')->store('musics');
             }
         }
-        echo 'endif';
+
+        if ($request->hasFile('audios')) {
+            foreach ($request->file('audios') as $index=> $audio) {
+                if ($audio->isValid()) {
+                    Log::debug(print_r($audio, true));
+                }
+            }
+        }
 
         $music = new Music;
         $music->path = $path;

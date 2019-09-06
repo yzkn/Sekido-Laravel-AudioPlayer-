@@ -24,6 +24,7 @@
                         <form method="POST" action="/music" enctype="multipart/form-data" >
                             {{ csrf_field() }}
                             <input type="file" name="audio">
+                            <input type="file" name="audios[]" multiple>
                             <input type="submit">
                         </form>
                         @endcan
