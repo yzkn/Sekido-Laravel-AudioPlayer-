@@ -37,9 +37,38 @@ class MusicController extends Controller
      */
     public function store(Request $request)
     {
+        echo 'store';
+        $validatedData = $request->validate([
+            // 'title' => 'required|unique:musics|max:255',
+            'audio' => 'mimes:mp3,mpga',
+        ]);
+        echo 'validatedData';
+
+        if ($request->hasFile('audio')) { //"audio" は input type の name属性
+            echo 'audio';
+
+            if ($request->file('audio')->isValid()) { //"audio" は input type の name属性
+                echo 'isValid';
+                echo $request->file('audio')->guessExtension();
+
+                $path = $request->file('audio')->store('musics');
+            }
+        }
+        echo 'endif';
+
         $music = new Music;
-        $music->title = $request->title;
+        $music->path = $path;
+        $music->title = 't'; // $request->title;
+        $music->artist = 't';
+        $music->album = 't';
+        $music->track_num = 1;
+        $music->related_works = 't';
         $music->save();
+        echo 'save';
+
+
+        // hash_hmac('sha256', $pass, false)
+
         return redirect('music/'.$music->id);
     }
 

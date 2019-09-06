@@ -18,12 +18,19 @@
                     <span>
                         @can('system-only') {{-- システム管理者権限のみに表示される --}}
                         System Administrator
-                        @elsecan('admin-higher') {{-- 管理者権限以上に表示される --}}
-                        Administrator
-                        @elsecan('user-higher') {{-- 一般権限以上に表示される --}}
-                        user
+                        @endcan
+
+                        @can('admin-higher') {{-- 管理者権限以上に表示される --}}
+                        System Administrator
                         @endcan
                     </span>
+                    {{ $music->id }}
+                    {{ $music->path }}
+                    {{ $music->title }}
+                    {{ $music->artist }}
+                    {{ $music->album }}
+                    {{ $music->track_num }}
+                    {{ $music->related_works }}
                 </div>
             </div>
         </div>

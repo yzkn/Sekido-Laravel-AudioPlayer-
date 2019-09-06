@@ -18,10 +18,14 @@
                     <span>
                         @can('system-only') {{-- システム管理者権限のみに表示される --}}
                         System Administrator
-                        @elsecan('admin-higher')　{{-- 管理者権限以上に表示される --}}
-                        Administrator
-                        @elsecan('user-higher') {{-- 一般権限以上に表示される --}}
-                        user
+                        @endcan
+
+                        @can('admin-higher') {{-- 管理者権限以上に表示される --}}
+                        <form method="POST" action="/music" enctype="multipart/form-data" >
+                            {{ csrf_field() }}
+                            <input type="file" name="audio">
+                            <input type="submit">
+                        </form>
                         @endcan
                     </span>
                 </div>
