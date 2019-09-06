@@ -27,16 +27,8 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
 
   // 管理者以上
 Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
-    // 楽曲登録
-    Route::get('/music/regist', 'MusicController@regist')->name('music.regist');
-    Route::post('/music/regist', 'MusicController@createData')->name('music.regist');
-
-    // 楽曲編集
-    Route::get('/music/edit/{music_id}', 'MusicController@edit')->name('music.edit');
-    Route::post('/music/edit/{music_id}', 'MusicController@updateData')->name('music.edit');
-
-    // 楽曲削除
-    Route::post('/music/delete/{music_id}', 'MusicController@deleteData');
+    // 楽曲CRUD
+    Route::resource('/music', 'MusicController');
 });
 
   // システム管理者のみ
