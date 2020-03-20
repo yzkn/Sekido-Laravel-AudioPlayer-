@@ -15,13 +15,18 @@ class CreateMusicsTable extends Migration
     {
         Schema::create('musics', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
-            $table->string('path')->unique();
-            $table->string('title');
-            $table->string('artist');
             $table->string('album');
-            $table->tinyInteger('track_num');
+            $table->string('artist');
+            $table->string('bitrate');
+            $table->string('genre');
+            $table->string('originalArtist');
+            $table->string('path')->unique();
+            $table->string('playtime_seconds');
             $table->string('related_works');
+            $table->string('title');
+            $table->string('year');
+            $table->timestamps();
+            $table->tinyInteger('track_num');
         });
     }
 

@@ -16,7 +16,8 @@ class MusicController extends Controller
      */
     public function index()
     {
-        $musics = Music::latest()->get();
+        $musics = Music::get();
+        Log::debug('musics: ' . $musics);
         return view('music.index', ['musics' => $musics]);
     }
 
@@ -43,34 +44,40 @@ class MusicController extends Controller
             'audio' => 'mimes:mp3,mpga',
         ]);
 
-        if ($request->hasFile('audio')) {
-            if ($request->file('audio')->isValid()) {
-                $path = $request->file('audio')->store('musics');
-            }
-        }
-
         if ($request->hasFile('audios')) {
             foreach ($request->file('audios') as $index=> $audio) {
                 if ($audio->isValid()) {
-                    Log::debug(print_r($audio, true));
+                    Log::debug('audio: ' . print_r($audio, true));
+                    $stored = basename($audio->store('public/musics'));
+                    Log::debug('stored: ' . $stored);
+
+                    $path = $audio->path();
+                    Log::debug('path: ' . $path);
+
+                    $getID3 = new \getID3();
+                    $tag = $getID3->analyze($path);
+
+                    $music = new Music;
+
+                    $music->path = '/storage/musics/' . $stored;
+
+                    $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8','auto') ?? '';
+                    $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8','auto') ?? '';
+                    $music->bitrate = $tag['bitrate'] ?? '';
+                    $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8','auto') ?? '';
+                    $music->originalArtist = '';
+                    $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
+                    $music->related_works = '';
+                    $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8','auto') ?? '';
+                    $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
+                    $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
+                    $music->save();
+                    echo 'save';
                 }
             }
         }
 
-        $music = new Music;
-        $music->path = $path;
-        $music->title = 't'; // $request->title;
-        $music->artist = 't';
-        $music->album = 't';
-        $music->track_num = 1;
-        $music->related_works = 't';
-        $music->save();
-        echo 'save';
-
-
-        // hash_hmac('sha256', $pass, false)
-
-        return redirect('music/'.$music->id);
+        return redirect('music');
     }
 
     /**

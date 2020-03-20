@@ -23,10 +23,15 @@
                         @can('admin-higher') {{-- 管理者権限以上に表示される --}}
                         <form method="POST" action="/music" enctype="multipart/form-data" >
                             {{ csrf_field() }}
-                            <input type="file" name="audio">
                             <input type="file" name="audios[]" multiple>
                             <input type="submit">
                         </form>
+
+                        <ul>
+                            @foreach ($musics as $music)
+                                <li><a href="{{ $music->path }}" target="blank_">{{$music->artist}} / {{$music->title}}</a></li>
+                            @endforeach
+                        </ul>
                         @endcan
                     </span>
                 </div>

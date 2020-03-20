@@ -24,13 +24,18 @@
                         System Administrator
                         @endcan
                     </span>
-                    {{ $music->id }}
-                    {{ $music->path }}
-                    {{ $music->title }}
-                    {{ $music->artist }}
                     {{ $music->album }}
-                    {{ $music->track_num }}
+                    {{ $music->artist }}
+                    {{ $music->bitrate }}
+                    {{ $music->genre }}
+                    {{ $music->id }}
+                    {{ $music->originalArtist }}
+                    {{ $music->path }}
+                    {{ $music->playtime_seconds }}
                     {{ $music->related_works }}
+                    {{ $music->title }}
+                    {{ $music->track_num }}
+                    {{ $music->year }}
                 </div>
             </div>
         </div>
