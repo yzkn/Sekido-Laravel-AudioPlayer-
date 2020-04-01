@@ -8,17 +8,17 @@
 $ git clone https://github.com/YA-androidapp/Laravel-Mp3Player-Sample
 ```
 
+## ライブラリのインストール
+
+```ps
+$ composer install
+```
+
 ## 設定ファイル
 
 ```ps
 $ cp .env.example .env
 $ php artisan key:generate
-```
-
-## ライブラリのインストール
-
-```ps
-$ composer install
 ```
 
 ## DB の準備

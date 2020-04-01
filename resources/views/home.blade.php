@@ -25,6 +25,11 @@
                         @endcan
                     </span>
                 </div>
+                @auth
+                    <div class="card-body">
+                        <a href="{{ url('/music') }}">{{ __('Music') }}</a>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>
