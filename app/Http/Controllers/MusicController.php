@@ -9,6 +9,12 @@ use Log;
 
 class MusicController extends Controller
 {
+    public function upload()
+    {
+        Log::debug('music: upload');
+        return view('music.upload');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,6 +45,8 @@ class MusicController extends Controller
      */
     public function store(Request $request)
     {
+        $FROM_ENC = 'ASCII,JIS,UTF-8,EUC-JP,SJIS';
+
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
             'audio' => 'mimes:mp3,mpga',
@@ -61,14 +69,14 @@ class MusicController extends Controller
 
                     $music->path = '/storage/musics/' . $stored;
 
-                    $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8','auto') ?? '';
-                    $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8','auto') ?? '';
+                    $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8',$FROM_ENC) ?? '';
+                    $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8',$FROM_ENC) ?? '';
                     $music->bitrate = $tag['bitrate'] ?? '';
-                    $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8','auto') ?? '';
+                    $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8',$FROM_ENC) ?? '';
                     $music->originalArtist = '';
                     $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
                     $music->related_works = '';
-                    $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8','auto') ?? '';
+                    $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8',$FROM_ENC) ?? '';
                     $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
                     $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
                     $music->save();

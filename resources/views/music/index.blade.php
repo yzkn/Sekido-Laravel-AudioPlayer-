@@ -20,9 +20,14 @@
                         @can('system-only') {{-- システム管理者権限のみに表示される --}}
                         System Administrator
                         @endcan
-
                     </span>
                 </div>
+
+                @can('admin-higher') {{-- 管理者権限以上に表示される --}}
+                    <div class="card-body">
+                        <a href="{{ url('/music/upload') }}">{{ __('Upload') }}</a>
+                    </div>
+                @endcan
             </div>
         </div>
 
@@ -32,11 +37,15 @@
                     <h1 class="display-4">Player</h1>
                     <hr class="my-4">
                     <audio autoplay preload="auto"></audio>
+                    <hr class="my-4">
+                    <p class="text-right"><a id="audio_detail" href="#" target="blank_">Detail</a></p>
                 </div>
 
                 <ol id="playlist" class="list-group mt-4 col-md-12">
                     @foreach ($musics as $music)
-                        <li class="list-group-item"><a href="#" data-src="{{ $music->path }}" target="blank_">{{$music->artist}} / {{$music->title}}</a></li>
+                        <li class="list-group-item">
+                            <a href="#" data-src="{{ $music->path }}" id="{{ $music->id }}">{{$music->artist}} / {{$music->title}}</a>
+                        </li>
                     @endforeach
                 </ol>
             </div>
@@ -45,15 +54,6 @@
     </div>
     <div class="col-md-8" id="shortcuts">
         <div class="row">
-            @can('admin-higher') {{-- 管理者権限以上に表示される --}}
-                <div class="col">
-                    <form method="POST" action="/music" enctype="multipart/form-data" >
-                        {{ csrf_field() }}
-                        <input type="file" name="audios[]" multiple>
-                        <input type="submit">
-                    </form>
-                </div>
-            @endcan
             <div class="col">
                 <h1>Keyboard shortcuts:</h1>
                 <p><em>&rarr;</em> Next track</p>
@@ -71,19 +71,21 @@
         // Setup the player to autoplay the next track
         var a = audiojs.createAll({
             trackEnded: function() {
-            var next = $('ol li.playing').next();
-            if (!next.length) next = $('ol li').first();
-            next.addClass('playing').siblings().removeClass('playing');
-            audio.load($('a', next).attr('data-src'));
-            audio.play();
+                var next = $('ol li.playing').next();
+                if (!next.length) next = $('ol li').first();
+                next.addClass('playing').siblings().removeClass('playing');
+                audio.load($('a', next).attr('data-src'));
+                audio.play();
+                $('a#audio_detail').attr('href', '/music/' + $('a', next).attr('id'));
             }
         });
 
         // Load in the first track
         var audio = a[0];
-            first = $('ol a').attr('data-src');
+        var first = $('ol a').attr('data-src');
         $('ol li').first().addClass('playing');
         audio.load(first);
+        $('a#audio_detail').attr('href', '/music/' + $('ol a').attr('id'));
 
         // Load in a track on click
         $('ol li').click(function(e) {
@@ -91,6 +93,7 @@
             $(this).addClass('playing').siblings().removeClass('playing');
             audio.load($('a', this).attr('data-src'));
             audio.play();
+            $('a#audio_detail').attr('href', '/music/' + $('a', this).attr('id'));
         });
         // Keyboard shortcuts
         $(document).keydown(function(e) {
