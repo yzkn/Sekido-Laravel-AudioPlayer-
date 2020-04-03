@@ -5,40 +5,55 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Detail - {{ $music->id }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-12 row justify-content-center my-5">
+                                <audio preload="auto" controlls src="{{ isset($music) ? $music->path : '' }}"></audio>
+                            </div>
+                            <div class="col-sm-4 my-2">{{ __('Title') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->title }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Artist') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->artist }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Album') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->album }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Track number') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->track_num }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Bitrate') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->bitrate }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Genre') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->genre }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Original Artist') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->originalArtist }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Playtime') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->playtime_seconds }} sec</div>
+                            <div class="col-sm-4 my-2">{{ __('Related works') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->related_works }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Year') }}</div>
+                            <div class="col-sm-8 my-2">{{ $music->year }}</div>
+                            <div class="mt-5 col-sm-8 offset-sm-4">
+                                <a href="{{ url('music/'.$music->id.'/edit') }}" class="btn btn-primary">{{ __('Edit') }}</a>
+                                <form action="{{ url('music/'. $music->id) }}" method="post" style="display:inline;" onSubmit="return window.confirm('削除しますか？')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                                </form>
+                            </div>
                         </div>
-                    @endif
-
-                    You are logged in as a
-                    <span>
-                        @can('system-only') {{-- システム管理者権限のみに表示される --}}
-                        System Administrator
-                        @endcan
-
-                        @can('admin-higher') {{-- 管理者権限以上に表示される --}}
-                        System Administrator
-                        @endcan
-                    </span>
-                    {{ $music->album }}
-                    {{ $music->artist }}
-                    {{ $music->bitrate }}
-                    {{ $music->genre }}
-                    {{ $music->id }}
-                    {{ $music->originalArtist }}
-                    {{ $music->path }}
-                    {{ $music->playtime_seconds }}
-                    {{ $music->related_works }}
-                    {{ $music->title }}
-                    {{ $music->track_num }}
-                    {{ $music->year }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/audio.js"></script>
+<script>
+    audiojs.events.ready(function() {
+        var as = audiojs.createAll();
+    });
+</script>
 @endsection

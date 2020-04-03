@@ -8,24 +8,27 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
+                @auth
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    You are logged in as a
+                    You are logged in as
                     <span>
                         @can('system-only') {{-- システム管理者権限のみに表示される --}}
-                        System Administrator
+                        the System Administrator
                         @elsecan('admin-higher') {{-- 管理者権限以上に表示される --}}
-                        Administrator
+                        the Administrator
                         @elsecan('user-higher') {{-- 一般権限以上に表示される --}}
-                        user
+                        a user
                         @endcan
-                    </span>
+                    </span>.
+                @else
+                You are not logged in. <a href="{{ route('login') }}">{{ __('Login') }}</a>
+                @endauth
                 </div>
-                @auth
                     <div class="card-body">
                         <a href="{{ url('/music') }}">{{ __('Music') }}</a>
                     </div>
@@ -34,7 +37,6 @@
                             <a href="{{ url('/music/upload') }}">{{ __('Upload') }}</a>
                         </div>
                     @endcan
-                @endauth
             </div>
         </div>
     </div>

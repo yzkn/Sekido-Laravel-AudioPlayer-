@@ -15,27 +15,22 @@ class CreateMusicsTable extends Migration
     {
         Schema::create('musics', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('album');
-            $table->string('artist');
-            $table->string('bitrate');
-            $table->string('genre');
-            $table->string('originalArtist');
             $table->string('path')->unique();
-            $table->string('playtime_seconds');
-            $table->string('related_works');
-            $table->string('title');
-            $table->string('year');
+
+            $table->string('album')->nullable();
+            $table->string('artist')->nullable();
+            $table->string('bitrate')->nullable();
+            $table->string('genre')->nullable();
+            $table->string('originalArtist')->nullable();
+            $table->string('playtime_seconds')->nullable();
+            $table->string('related_works')->nullable();
+            $table->string('title')->nullable();
+            $table->string('year')->nullable();
             $table->timestamps();
-            $table->tinyInteger('track_num');
+            $table->tinyInteger('track_num')->nullable();
         });
     }
 
-    /*
-    audiofile.tag.artist = u"Nobunny"
-audiofile.tag.album = u"Love Visions"
-audiofile.tag.title = u"I Am a Girlfriend"
-audiofile.tag.track_num = 4
-    */
     /**
      * Reverse the migrations.
      *

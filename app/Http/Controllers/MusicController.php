@@ -34,7 +34,7 @@ class MusicController extends Controller
      */
     public function create()
     {
-        return view('music.create');
+        return redirect('music');
     }
 
     /**
@@ -108,8 +108,10 @@ class MusicController extends Controller
      */
     public function edit($id)
     {
+        $genre_list = \getid3_id3v1::ArrayOfGenres();
+
         $music = Music::where('id', $id)->first();
-        return view('music.edit', ['music' => $music]);
+        return view('music.edit', ['music' => $music, 'genre_list' => $genre_list]);
     }
 
     /**
@@ -122,7 +124,16 @@ class MusicController extends Controller
     public function update(Request $request, $id)
     {
         $music = Music::where('id', $id)->first();
-        $music->title = $request->title;
+        $music->title = $request->title ?? '';
+        $music->artist = $request->artist ?? '';
+        $music->album = $request->album ?? '';
+        $music->track_num = $request->track_num ?? '';
+        $music->bitrate = $request->bitrate ?? '';
+        $music->genre = $request->genre ?? '';
+        $music->originalArtist = $request->originalArtist ?? '';
+        $music->playtime_seconds = $request->playtime_seconds ?? '';
+        $music->related_works = $request->related_works ?? '';
+        $music->year = $request->year ?? '';
         $music->save();
         return redirect('music/'.$music->id);
     }

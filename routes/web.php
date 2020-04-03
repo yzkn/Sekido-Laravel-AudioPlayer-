@@ -12,12 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 // 全員
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
