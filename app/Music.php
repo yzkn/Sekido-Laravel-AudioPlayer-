@@ -9,6 +9,7 @@ class Music extends Model{
         'album',
         'artist',
         'bitrate',
+        'cover',
         'genre',
         'originalArtist',
         'path',
@@ -24,6 +25,7 @@ class Music extends Model{
             'album: ' . $this -> album . "\t" .
             'artist: ' . $this -> artist . "\t" .
             'bitrate: ' . $this -> bitrate . "\t" .
+            'cover: ' . $this -> cover . "\t" .
             'genre: ' . $this -> genre . "\t" .
             'id: ' . $this -> id . "\t" .
             'originalArtist: ' . $this -> originalArtist . "\t" .

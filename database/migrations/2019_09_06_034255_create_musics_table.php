@@ -20,6 +20,7 @@ class CreateMusicsTable extends Migration
             $table->string('album')->nullable();
             $table->string('artist')->nullable();
             $table->string('bitrate')->nullable();
+            $table->string('cover')->nullable();
             $table->string('genre')->nullable();
             $table->string('originalArtist')->nullable();
             $table->string('playtime_seconds')->nullable();

@@ -33,6 +33,14 @@
                             <div class="col-sm-8 my-2">{{ $music->related_works }}</div>
                             <div class="col-sm-4 my-2">{{ __('Year') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->year }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Cover') }}</div>
+                            <div class="col-sm-8 my-2">
+                                @isset($music)
+                                    @isset($music->cover)
+                                        <img src="{{ $music->cover }}" alt="cover"><br>
+                                    @endisset
+                                @endisset
+                            </div>
                             <div class="mt-5 col-sm-8 offset-sm-4">
                                 <a href="{{ url('music/'.$music->id.'/edit') }}" class="btn btn-primary">{{ __('Edit') }}</a>
                                 <form action="{{ url('music/'. $music->id) }}" method="post" style="display:inline;" onSubmit="return window.confirm('削除しますか？')">

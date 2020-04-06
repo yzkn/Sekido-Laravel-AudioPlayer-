@@ -10,7 +10,7 @@
                     <h1 class="display-4">Upload</h1>
                     <hr class="my-4">
                     <div class="col">
-                        <form method="POST" action="/music" enctype="multipart/form-data" >
+                        <form method="POST" action="{{ url('music/') }}" enctype="multipart/form-data" >
                             {{ csrf_field() }}
                             <div class="input-group">
                                 <label class="input-group-btn">
