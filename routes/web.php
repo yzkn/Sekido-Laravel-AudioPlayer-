@@ -25,8 +25,13 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
 
   // 管理者以上
 Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
+    // 検索
+    Route::get('/music/search', 'MusicController@searchform')->name('music.searchform');
+    Route::post('/music/search', 'MusicController@search')->name('music.search');
+
     // ファイルアップロード
     Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
+
     // 楽曲CRUD
     Route::resource('/music', 'MusicController');
 });

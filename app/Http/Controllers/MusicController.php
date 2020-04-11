@@ -4,8 +4,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Music;
-use Log;
 
 class MusicController extends Controller
 {
@@ -20,11 +21,72 @@ class MusicController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $musics = Music::get();
         Log::debug('musics: ' . $musics);
         return view('music.index', ['musics' => $musics]);
+    }
+
+    public function search(Request $request)
+    {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+
+        $genre_list = \getid3_id3v1::ArrayOfGenres();
+        $sort_list = [
+            'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+        ];
+
+        $query = Music::query();
+        // 'playtime_seconds_min', 'playtime_seconds_max'は別途
+        foreach ($request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
+            if(($request->get($key))){
+                $query->where($key, 'like', '%'.$value.'%');
+            }
+        }
+
+        if($request->has('playtime_seconds_min') && ($request->get('playtime_seconds_min'))) {
+            Log::debug('playtime_seconds_min: '.$request->get('playtime_seconds_min'));
+            $query->where('playtime_seconds', '>=', $request->get('playtime_seconds_min'));
+        }
+        if($request->has('playtime_seconds_max') && ($request->get('playtime_seconds_min'))) {
+            $query->where('playtime_seconds', '<=', $request->get('playtime_seconds_max'));
+        }
+
+        if($request->has('sort_key') && ($request->get('sort_key'))) {
+            if(
+                in_array(
+                    $request->get('sort_key'),
+                    [
+                        'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+                    ]
+                )
+            ) {
+            Log::debug('sort_key: '.$request->sort_key);
+                $query->orderBy($request->sort_key, (strpos($request->sort_key, '-') === 0 ) ? 'desc' : 'asc');
+            }
+        }
+
+        $musics = $query->get();
+
+        Log::debug('request: '.print_r($request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key']), true));
+
+        return view('music.search', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
+    }
+
+    public function searchform()
+    {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+
+        $genre_list = \getid3_id3v1::ArrayOfGenres();
+        $sort_list = [
+            'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+        ];
+
+        return view('music.search', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list]);
     }
 
     /**
