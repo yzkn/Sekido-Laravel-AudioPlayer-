@@ -13,6 +13,7 @@ $(function () {
                 "href",
                 baseurl_detail + $("a", next).attr("id") ?? ""
             );
+            $("a#audio_detail").attr("music_id", $("a", next).attr("id") ?? "");
             $("#audio_artist").attr(
                 "href",
                 baseurl_search_artist +
@@ -32,6 +33,7 @@ $(function () {
         "href",
         baseurl_detail + $("ol a").attr("id") ?? ""
     );
+    $("a#audio_detail").attr("music_id", $("ol a").attr("id") ?? "");
     $("#audio_artist").attr(
         "href",
         baseurl_search_artist +
@@ -50,6 +52,7 @@ $(function () {
             "href",
             baseurl_detail + $("a", this).attr("id") ?? ""
         );
+        $("a#audio_detail").attr("music_id", $("a", this).attr("id") ?? "");
         $("#audio_artist").attr(
             "href",
             baseurl_search_artist +
@@ -76,4 +79,36 @@ $(function () {
             audio.playPause();
         }
     });
+
+    $("button.queue").click(function (e) {
+        add_to_queue(
+            $("a#audio_detail").attr("music_id"),
+            $("li.playing").html()
+        );
+    });
 });
+
+function add_to_queue(music_id, datasrc) {
+    key = "queue";
+
+    datalist = JSON.parse(localStorage.getItem(key));
+    console.log(datalist);
+    if (datalist === null) {
+        datalist = {};
+    }
+    datalist[music_id] = datasrc;
+    localStorage.setItem(key, JSON.stringify(datalist));
+
+    return true;
+}
+
+function remove_from_queue(music_id) {
+    key = "queue";
+
+    datalist = JSON.parse(localStorage.getItem(key));
+    console.log(datalist);
+    delete datalist[music_id];
+    localStorage.setItem(key, JSON.stringify(datalist));
+
+    return true;
+}

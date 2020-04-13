@@ -15,6 +15,9 @@
                         <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
                         <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
                     </div>
+                    <div class="row mt-1 col-sm-9 offset-sm-3">
+                        <button id="add_to_queue" type="button" class="queue btn btn-outline-warning">Add to queue</button>
+                    </div>
                 </div>
 
                 <ol id="playlist" class="list-group my-5 col-md-12">
