@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="stylesheet" type="text/css" href="/css/audio.css">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -16,6 +17,19 @@
                             <div class="col-sm-8 my-2">{{ $music->title ?? '' }}</div>
                             <div class="col-sm-4 my-2">{{ __('Artist') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->artist ?? '' }}</div>
+                            <div class="col-sm-4 my-2">{{ __('Playlist') }}</div>
+                            <div class="col-sm-8 my-2">
+                                <ul class="list-group">
+                                    @foreach($music->playlists as $playlist)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a href="{{ url('playlist/'.$playlist->id) }}">
+                                                {{ $playlist->title }}
+                                                <span class="badge badge-primary badge-pill">{{ count($playlist->musics) }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             <div class="col-sm-4 my-2">{{ __('Album') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->album ?? '' }}</div>
                             <div class="col-sm-4 my-2">{{ __('Track number') }}</div>
@@ -36,12 +50,12 @@
                             <div class="col-sm-8 my-2">
                                 @isset($music)
                                     @isset($music->cover)
-                                        <img src="{{ $music->cover }}" alt="cover"><br>
+                                        <img src="{{ $music->cover }}" alt=""><br>
                                     @endisset
                                 @endisset
                             </div>
                             <div class="mt-5 col-sm-8 offset-sm-4">
-                                @isset($records)
+                                @isset($music)
                                     @isset($music->id)
                                         <a href="{{ url('music/'.$music->id.'/edit') }}" class="btn btn-primary">{{ __('Edit') }}</a>
                                         <form action="{{ url('music/'. $music->id) }}" method="post" style="display:inline;" onSubmit="return window.confirm('削除しますか？')">

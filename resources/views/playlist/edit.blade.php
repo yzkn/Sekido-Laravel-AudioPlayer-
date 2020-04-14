@@ -21,7 +21,7 @@
                                     <input type="text" class="form-control" id="description" name="artist" value="{{ old('description', isset($playlist) ? $playlist->description : '') }}" placeholder="{{ __('Description') }}">
                                 </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
-                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</a>
+                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </div>

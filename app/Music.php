@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Music extends Model{
     protected $fillable = [
@@ -17,7 +18,7 @@ class Music extends Model{
         'related_works',
         'title',
         'track_num',
-        'year',
+        'year'
     ];
 
     public function toString(){
@@ -34,7 +35,20 @@ class Music extends Model{
             'related_works: ' . $this -> related_works. "\t" .
             'title: ' . $this -> title . "\t" .
             'track_num: ' . $this -> track_num . "\t" .
-            'year: ' . $this -> year . "\t"
+            'year: ' . $this -> year . "\t" .
+            'playlists: ' . implode(',', $this -> playlists) . "\t"
         ;
+    }
+
+    public function playlists()
+    {
+        return $this->belongsToMany('App\Playlist');
+    }
+
+
+    public function savePlaylists(int $id, array $playlists)
+    {
+        $music = $this->find($id);
+        return $music->playlists()->attach($playlists);
     }
 }

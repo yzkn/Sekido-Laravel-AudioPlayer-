@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Playlist extends Model
 {
@@ -11,5 +12,10 @@ class Playlist extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public function musics()
+    {
+        return $this->belongsToMany('App\Music');
     }
 }

@@ -7,17 +7,6 @@
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
             <div class="col-md-8">
                 <div class="jumbotron my-5">
-                    <h1 class="display-4 my-3">Player</h1>
-                    <div class="row mt-3 justify-content-center">
-                        <audio autoplay preload="auto"></audio>
-                    </div>
-                    <div class="row mt-1 col-sm-9 offset-sm-3">
-                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
-                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
-                    </div>
-                </div>
-
-                <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Search</h1>
 
                         <form method="POST" action="{{ url('music/search') }}" enctype="multipart/form-data" >
@@ -84,14 +73,28 @@
                         </form>
                 </div>
 
+                <div class="jumbotron my-5">
+                    <h1 class="display-4 my-3">Player</h1>
+                    <div class="row mt-3 justify-content-center">
+                        <audio autoplay preload="auto"></audio>
+                    </div>
+                    <div class="row mt-1 col-sm-9 offset-sm-3">
+                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
+                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                    </div>
+                </div>
+
                 <ol id="playlist" class="list-group my-5 col-md-12">
                     @foreach ($musics as $music)
                         <li class="list-group-item">
                             <a href="#"
+                                class="musicitem"
                                 data-src="{{ $music->path }}"
                                 id="{{ $music->id }}"
                                 audio_artist="{{ $music->artist }}"
                                 audio_title="{{ $music->title }}" >{{$music->artist}} / {{$music->title}}</a>
+                            <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button>
+                            <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
                         </li>
                     @endforeach
                 </ol>

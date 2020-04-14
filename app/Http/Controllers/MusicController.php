@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Music;
+use App\Playlist;
 
 class MusicController extends Controller
 {
@@ -172,8 +173,11 @@ class MusicController extends Controller
     {
         $genre_list = \getid3_id3v1::ArrayOfGenres();
 
+        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+        Log::debug('playlists: ' . $playlists);
+
         $music = Music::where('id', $id)->first();
-        return view('music.edit', ['music' => $music, 'genre_list' => $genre_list]);
+        return view('music.edit', ['music' => $music, 'genre_list' => $genre_list, 'playlists' => $playlists]);
     }
 
     /**
@@ -218,6 +222,31 @@ class MusicController extends Controller
             $music->related_works = $request->related_works ?? '';
             $music->year = $request->year ?? '';
             $music->save();
+
+
+
+            $playlists = $request->playlists ?? [];
+            unset($request['playlists']);
+            if(count($playlists)>0){
+                Log::debug('id: ' . print_r($id, true));
+                Log::debug('playlists: ' . print_r($playlists, true));
+                Log::debug('music->playlists: ' . print_r($music->playlists, true));
+
+                if(0 === count($playlists)){
+                    $playlists = array();
+                }
+                if(0 === count($music->playlists)){
+                    $music->playlists = array();
+                }
+
+                $to_create = array_diff($playlists, $music->playlists);
+                $to_remove = array_diff($music->playlists, $playlists);
+                Log::debug('to_create: ' . print_r($to_create, true));
+                Log::debug('to_remove: ' . print_r($to_remove, true));
+
+                $music->savePlaylists($id, $playlists);
+            }
+
             return redirect('music/'.$music->id)->with('success', '更新しました。');
         }else{
             return redirect()

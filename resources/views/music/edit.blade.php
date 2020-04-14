@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="stylesheet" type="text/css" href="/css/audio.css">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -22,6 +23,14 @@
                                 <div class="col-sm-4 my-2">{{ __('Artist') }}</div>
                                 <div class="col-sm-8 my-2">
                                     <input type="text" class="form-control" id="artist" name="artist" value="{{ old('artist', isset($music) ? $music->artist : '') }}" placeholder="{{ __('Artist') }}">
+                                </div>
+                                <div class="col-sm-4 my-2">{{ __('Playlist') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    <select name="playlists[]" class="form-control" id="playlists" multiple>
+                                        @foreach($playlists as $playlist)
+                                            <option value="{{ $playlist->id }}" @if(in_array($playlist->id,old('playlists') ?? [])) selected @endif>{{ $playlist->title }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-sm-4 my-2">{{ __('Album') }}</div>
                                 <div class="col-sm-8 my-2">
@@ -71,7 +80,7 @@
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($music) ? $music->cover : '') }}" placeholder="{{ __('Cover') }}">
                                 </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
-                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</a>
+                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </div>
