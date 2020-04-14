@@ -1,6 +1,19 @@
 $(function () {
     let baseurl_detail = "/music/";
     let baseurl_search_artist = "/music/search?artist=";
+
+    function set_info(tag) {
+        $("a#audio_detail").attr("href", baseurl_detail + tag.attr("id") ?? "");
+        $("a#audio_detail").attr("music_id", tag.attr("id") ?? "");
+        $("#audio_artist").attr(
+            "href",
+            baseurl_search_artist +
+                encodeURIComponent(tag.attr("audio_artist")) ?? ""
+        );
+        $("#audio_artist").text(tag.attr("audio_artist"));
+        $("#audio_title").text(tag.attr("audio_title"));
+    }
+
     // Setup the player to autoplay the next track
     var a = audiojs.createAll({
         trackEnded: function () {
@@ -9,18 +22,7 @@ $(function () {
             next.addClass("playing").siblings().removeClass("playing");
             audio.load($("a", next).attr("data-src"));
             audio.play();
-            $("a#audio_detail").attr(
-                "href",
-                baseurl_detail + $("a", next).attr("id") ?? ""
-            );
-            $("a#audio_detail").attr("music_id", $("a", next).attr("id") ?? "");
-            $("#audio_artist").attr(
-                "href",
-                baseurl_search_artist +
-                    encodeURIComponent($("a", next).attr("audio_artist")) ?? ""
-            );
-            $("#audio_artist").text($("a", next).attr("audio_artist"));
-            $("#audio_title").text($("a", next).attr("audio_title"));
+            set_info($("a", next));
         },
     });
 
@@ -29,37 +31,15 @@ $(function () {
     var first = $("ol a").attr("data-src");
     $("ol li").first().addClass("playing");
     audio.load(first);
-    $("a#audio_detail").attr(
-        "href",
-        baseurl_detail + $("ol a").attr("id") ?? ""
-    );
-    $("a#audio_detail").attr("music_id", $("ol a").attr("id") ?? "");
-    $("#audio_artist").attr(
-        "href",
-        baseurl_search_artist +
-            encodeURIComponent($("ol a").attr("audio_artist")) ?? ""
-    );
-    $("#audio_artist").text($("ol a").attr("audio_artist"));
-    $("#audio_title").text($("ol a").attr("audio_title"));
+    set_info($("ol a"));
 
     // Load in a track on click
-    $("ol li").click(function (e) {
+    $("ol li a.musicitem").click(function (e) {
         e.preventDefault();
-        $(this).addClass("playing").siblings().removeClass("playing");
-        audio.load($("a", this).attr("data-src"));
+        $(this).parent().addClass("playing").siblings().removeClass("playing");
+        audio.load($(this).attr("data-src"));
         audio.play();
-        $("a#audio_detail").attr(
-            "href",
-            baseurl_detail + $("a", this).attr("id") ?? ""
-        );
-        $("a#audio_detail").attr("music_id", $("a", this).attr("id") ?? "");
-        $("#audio_artist").attr(
-            "href",
-            baseurl_search_artist +
-                encodeURIComponent($("a", this).attr("audio_artist")) ?? ""
-        );
-        $("#audio_artist").text($("a", this).attr("audio_artist"));
-        $("#audio_title").text($("a", this).attr("audio_title"));
+        set_info($(this));
     });
     // Keyboard shortcuts
     $(document).keydown(function (e) {
@@ -82,8 +62,8 @@ $(function () {
 
     $("button.queue").click(function (e) {
         add_to_queue(
-            $("a#audio_detail").attr("music_id"),
-            $("li.playing").html()
+            $(this).parent().find("a.musicitem").attr("id"),
+            $(this).parent().html()
         );
     });
 });

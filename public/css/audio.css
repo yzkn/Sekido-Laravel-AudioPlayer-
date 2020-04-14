@@ -43,10 +43,9 @@ ol li {
     cursor: pointer;
 }
 
-ol li a {
-    display: block;
+ol li a.musicitem {
     text-indent: -3.3ex;
-    padding: 0px 0px 0px 20px;
+    padding: 0px 50px 0px 20px;
 }
 
 li.playing {
@@ -54,7 +53,7 @@ li.playing {
     text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
 }
 
-li.playing a {
+li.playing a.musicitem {
     color: #000;
 }
 

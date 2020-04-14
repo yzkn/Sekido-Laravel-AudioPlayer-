@@ -34,6 +34,9 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
     // 楽曲CRUD
     Route::resource('/music', 'MusicController');
+
+    // プレイリストCRUD
+    Route::resource('/playlist', 'PlaylistController');
 });
 
   // システム管理者のみ
