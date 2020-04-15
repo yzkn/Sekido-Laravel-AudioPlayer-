@@ -21,6 +21,9 @@ Auth::routes();
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
     // 楽曲一覧
     Route::get('/music', 'MusicController@index')->name('music.index');
+
+    // プレイリストCRUD
+    Route::resource('/playlist', 'PlaylistController');
 });
 
   // 管理者以上
@@ -34,9 +37,6 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
     // 楽曲CRUD
     Route::resource('/music', 'MusicController');
-
-    // プレイリストCRUD
-    Route::resource('/playlist', 'PlaylistController');
 });
 
   // システム管理者のみ

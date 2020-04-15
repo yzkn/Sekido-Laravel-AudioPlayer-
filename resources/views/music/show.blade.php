@@ -24,7 +24,7 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <a href="{{ url('playlist/'.$playlist->id) }}">
                                                 {{ $playlist->title }}
-                                                <span class="badge badge-primary badge-pill">{{ count($playlist->musics) }}</span>
+                                                <span class="badge badge-info badge-pill">{{ count($playlist->musics) }}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -57,11 +57,11 @@
                             <div class="mt-5 col-sm-8 offset-sm-4">
                                 @isset($music)
                                     @isset($music->id)
-                                        <a href="{{ url('music/'.$music->id.'/edit') }}" class="btn btn-primary">{{ __('Edit') }}</a>
+                                        <a href="{{ url('music/'.$music->id.'/edit') }}" class="btn btn-outline-success">{{ __('Edit') }}</a>
                                         <form action="{{ url('music/'. $music->id) }}" method="post" style="display:inline;" onSubmit="return window.confirm('削除しますか？')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" name="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                                            <button type="submit" name="submit" class="btn btn-outline-danger">{{ __('Delete') }}</button>
                                         </form>
                                     @endisset
                                 @endisset

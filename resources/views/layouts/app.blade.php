@@ -49,12 +49,27 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/music') }}">{{ __('Music') }}</a>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Music') }} <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{{ url('music') }}">{{ __('List') }}</a></li>
+                                    <li><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
+                                    <li><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/playlist') }}">{{ __('Playlist') }}</a>
+
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Playlist') }} <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{{ url('playlist') }}">{{ __('List') }}</a></li>
+                                    <li><a class="nav-link" href="{{ url('playlist/create') }}">{{ __('Create') }}</a></li>
+                                </ul>
                             </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>

@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Music extends Model{
+class Music extends Model
+{
     protected $fillable = [
         'album',
         'artist',
@@ -45,10 +46,10 @@ class Music extends Model{
         return $this->belongsToMany('App\Playlist');
     }
 
-
-    public function savePlaylists(int $id, array $playlists)
+    public function savePlaylists(int $id, array $add, array $remove)
     {
         $music = $this->find($id);
-        return $music->playlists()->attach($playlists);
+        $music->playlists()->detach($remove);
+        return $music->playlists()->attach($add);
     }
 }

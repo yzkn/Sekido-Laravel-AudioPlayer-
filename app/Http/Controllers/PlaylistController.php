@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Music;
 use App\Playlist;
 
 class PlaylistController extends Controller
@@ -28,7 +29,10 @@ class PlaylistController extends Controller
      */
     public function create()
     {
-        return view('playlist.create');
+        $musics = Music::get();
+        Log::debug('musics: ' . $musics);
+
+        return view('playlist.create', ['musics' => $musics]);
     }
 
     /**
@@ -45,6 +49,38 @@ class PlaylistController extends Controller
         $playlist->user_id = Auth::user()->id;
         $playlist->save();
 
+        $musics = $request->musics ?? [];
+        unset($request['musics']);
+        if(count($musics)>0){
+            Log::debug('id: ' . print_r($playlist->id, true));
+            // Log::debug('musics: ' . print_r($musics, true));
+            // Log::debug('playlist->musics: ' . print_r($playlist->musics, true));
+
+            if(0 === count($musics)){
+                $new_music = array();
+            }else{
+                $new_music = (array)$musics;
+            }
+
+            if(0 === count($playlist->musics)){
+                $old_music = array();
+            } else {
+                foreach ($playlist->musics as $value) {
+                    $old_music[] = $value->id;
+                }
+            }
+
+            Log::debug('old_music: ' . print_r($old_music, true));
+            Log::debug('new_music: ' . print_r($new_music, true));
+
+            $add = array_diff($new_music, $old_music);
+            $remove = array_diff($old_music, $new_music);
+            Log::debug('add: ' . print_r($add, true));
+            Log::debug('remove: ' . print_r($remove, true));
+
+            $playlist->saveMusics($playlist->id, $add, $remove);
+        }
+
         return redirect('playlist');
     }
 
@@ -58,7 +94,6 @@ class PlaylistController extends Controller
     {
         $playlist = Playlist::where('id', $id)->first();
         return view('playlist.show', ['playlist' => $playlist]);
-        // return view('music.index', ['musics' => $playlist->musics]);
     }
 
     /**
@@ -69,8 +104,17 @@ class PlaylistController extends Controller
      */
     public function edit($id)
     {
+        $musics = Music::get();
+        Log::debug('musics: ' . $musics);
+
         $playlist = Playlist::where('id', $id)->first();
-        return view('playlist.edit', ['playlist' => $playlist]);
+        $playlist_musics = array();
+        foreach ($playlist->musics as $value) {
+            $playlist_musics[] = $value->id;
+        }
+        Log::debug('playlist_musics: ' . print_r($playlist_musics, true));
+
+        return view('playlist.edit', ['playlist' => $playlist, 'musics' => $musics, 'playlist_musics' => $playlist_musics]);
     }
 
     /**

@@ -14,13 +14,13 @@
                             {{ csrf_field() }}
                             <div class="input-group">
                                 <label class="input-group-btn">
-                                    <span class="btn btn-primary">
+                                    <span class="btn btn-outline-primary">
                                         Choose File<input type="file" style="display:none" name="audios[]" multiple>
                                     </span>
                                 </label>
                                 <input type="text" class="form-control" readonly="">
                             </div>
-                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="submit" class="btn btn-outline-primary">Upload</button>
                         </form>
                     </div>
                 </div>

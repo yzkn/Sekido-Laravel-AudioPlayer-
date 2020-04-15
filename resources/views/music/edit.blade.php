@@ -28,7 +28,7 @@
                                 <div class="col-sm-8 my-2">
                                     <select name="playlists[]" class="form-control" id="playlists" multiple>
                                         @foreach($playlists as $playlist)
-                                            <option value="{{ $playlist->id }}" @if(in_array($playlist->id,old('playlists') ?? [])) selected @endif>{{ $playlist->title }}</option>
+                                            <option value="{{ $playlist->id }}" @if(in_array($playlist->id, $music_playlists) || in_array($playlist->id, old('playlists') ?? [])) selected @endif>{{ $playlist->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -80,7 +80,7 @@
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($music) ? $music->cover : '') }}" placeholder="{{ __('Cover') }}">
                                 </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
-                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                    <button type="submit" name="submit" class="btn btn-outline-primary">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </div>

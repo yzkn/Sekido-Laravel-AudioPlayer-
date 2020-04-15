@@ -18,4 +18,11 @@ class Playlist extends Model
     {
         return $this->belongsToMany('App\Music');
     }
+
+    public function saveMusics(int $id, array $add, array $remove)
+    {
+        $playlist = $this->find($id);
+        $playlist->musics()->detach($remove);
+        return $playlist->musics()->attach($add);
+    }
 }

@@ -20,8 +20,16 @@
                                 <div class="col-sm-8 my-2">
                                     <input type="text" class="form-control" id="description" name="artist" value="{{ old('description', isset($playlist) ? $playlist->description : '') }}" placeholder="{{ __('Description') }}">
                                 </div>
+                                <div class="col-sm-4 my-2">{{ __('Musics') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    <select name="musics[]" class="form-control" id="musics" multiple>
+                                        @foreach($musics as $music)
+                                            <option value="{{ $music->id }}" @if(in_array($music->id, $playlist_musics) || in_array($music->id, old('musics') ?? [])) selected @endif>{{ $music->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
-                                    <button type="submit" name="submit" class="btn btn-primary">{{ __('Update') }}</button>
+                                    <button type="submit" name="submit" class="btn btn-outline-primary">{{ __('Update') }}</button>
                                 </div>
                             </div>
                         </div>

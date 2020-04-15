@@ -18,11 +18,11 @@
                                 <div class="mt-5 col-sm-8 offset-sm-4">
                                     @isset($playlist)
                                         @isset($playlist->id)
-                                            <a href="{{ url('playlist/'.$playlist->id.'/edit') }}" class="btn btn-primary">{{ __('Edit') }}</a>
+                                            <a href="{{ url('playlist/'.$playlist->id.'/edit') }}" class="btn btn-outline-success">{{ __('Edit') }}</a>
                                             <form action="{{ url('playlist/'. $playlist->id) }}" method="post" style="display:inline;" onSubmit="return window.confirm('削除しますか？')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" name="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                                                <button type="submit" name="submit" class="btn btn-outline-danger">{{ __('Delete') }}</button>
                                             </form>
                                         @endisset
                                     @endisset
@@ -47,15 +47,17 @@
 
                 <ol id="playlist" class="list-group my-5 col-md-12">
                     @foreach ($playlist->musics as $music)
-                        <li class="list-group-item">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="#"
                                 class="musicitem"
                                 data-src="{{ $music->path }}"
                                 id="{{ $music->id }}"
                                 audio_artist="{{ $music->artist }}"
                                 audio_title="{{ $music->title }}" >{{$music->artist}} / {{$music->title}}</a>
-                            <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button>
-                            <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
+                            <span>
+                                <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button>
+                                <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
+                            </span>
                         </li>
                     @endforeach
                 </ol>

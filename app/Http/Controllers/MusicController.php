@@ -177,7 +177,12 @@ class MusicController extends Controller
         Log::debug('playlists: ' . $playlists);
 
         $music = Music::where('id', $id)->first();
-        return view('music.edit', ['music' => $music, 'genre_list' => $genre_list, 'playlists' => $playlists]);
+        $music_playlists = array();
+        foreach ($music->playlists as $value) {
+            $music_playlists[] = $value->id;
+        }
+        Log::debug('music_playlists: ' . print_r($music_playlists, true));
+        return view('music.edit', ['music' => $music, 'genre_list' => $genre_list, 'playlists' => $playlists, 'music_playlists' => $music_playlists]);
     }
 
     /**
@@ -229,22 +234,32 @@ class MusicController extends Controller
             unset($request['playlists']);
             if(count($playlists)>0){
                 Log::debug('id: ' . print_r($id, true));
-                Log::debug('playlists: ' . print_r($playlists, true));
-                Log::debug('music->playlists: ' . print_r($music->playlists, true));
+                // Log::debug('playlists: ' . print_r($playlists, true));
+                // Log::debug('music->playlists: ' . print_r($music->playlists, true));
 
                 if(0 === count($playlists)){
-                    $playlists = array();
+                    $new_playlist = array();
+                }else{
+                    $new_playlist = (array)$playlists;
                 }
+
                 if(0 === count($music->playlists)){
-                    $music->playlists = array();
+                    $old_playlist = array();
+                } else {
+                    foreach ($music->playlists as $value) {
+                        $old_playlist[] = $value->id;
+                    }
                 }
 
-                $to_create = array_diff($playlists, $music->playlists);
-                $to_remove = array_diff($music->playlists, $playlists);
-                Log::debug('to_create: ' . print_r($to_create, true));
-                Log::debug('to_remove: ' . print_r($to_remove, true));
+                Log::debug('old_playlist: ' . print_r($old_playlist, true));
+                Log::debug('new_playlist: ' . print_r($new_playlist, true));
 
-                $music->savePlaylists($id, $playlists);
+                $add = array_diff($new_playlist, $old_playlist);
+                $remove = array_diff($old_playlist, $new_playlist);
+                Log::debug('add: ' . print_r($add, true));
+                Log::debug('remove: ' . print_r($remove, true));
+
+                $music->savePlaylists($id, $add, $remove);
             }
 
             return redirect('music/'.$music->id)->with('success', '更新しました。');
