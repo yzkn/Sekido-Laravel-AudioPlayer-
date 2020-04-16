@@ -26,14 +26,14 @@ class MusicController extends Controller
     {
         $user = Auth::user();
         $token = auth('api')->login($user);
-        // Log::debug('token: ' . $token);
+        Log::debug('token: ' . $token);
 
         $musics = Music::get();
         Log::debug('musics: ' . $musics);
         // return view('music.index', ['musics' => $musics]);
         return response()
             ->view('music.index', ['musics' => $musics])
-            ->cookie('token', $token, 30);
+            ->cookie('jwttoken', $token, 30);
     }
 
     public function search(Request $request)
