@@ -74,7 +74,7 @@
                                 <div class="col-sm-8 my-2">
                                     @isset($music)
                                         @isset($music->cover)
-                                            <img src="{{ $music->cover }}" alt="cover"><br>
+                                            <img src="{{ $music->cover }}" alt=""><br>
                                         @endisset
                                     @endisset
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($music) ? $music->cover : '') }}" placeholder="{{ __('Cover') }}">

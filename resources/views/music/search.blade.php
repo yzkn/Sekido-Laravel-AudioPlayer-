@@ -92,7 +92,10 @@
                                 data-src="{{ $music->path }}"
                                 id="{{ $music->id }}"
                                 audio_artist="{{ $music->artist }}"
-                                audio_title="{{ $music->title }}" >{{$music->artist}} / {{$music->title}}</a>
+                                audio_title="{{ $music->title }}" >
+                                <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
+                                    {{$music->artist}} / {{$music->title}}
+                            </a>
                             <span>
                                 <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button>
                                 <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
