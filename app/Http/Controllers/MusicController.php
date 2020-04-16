@@ -24,9 +24,16 @@ class MusicController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $token = auth('api')->login($user);
+        // Log::debug('token: ' . $token);
+
         $musics = Music::get();
         Log::debug('musics: ' . $musics);
-        return view('music.index', ['musics' => $musics]);
+        // return view('music.index', ['musics' => $musics]);
+        return response()
+            ->view('music.index', ['musics' => $musics])
+            ->cookie('token', $token, 30);
     }
 
     public function search(Request $request)
