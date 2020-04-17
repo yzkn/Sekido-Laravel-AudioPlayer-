@@ -130,6 +130,42 @@ class PlaylistController extends Controller
         if($playlist){
             $playlist->title = $request->title ?? '';
             $playlist->description = $request->description ?? '';
+
+
+            $musics = $request->musics ?? [];
+            unset($request['musics']);
+            if(count($musics)>0){
+                Log::debug('id: ' . print_r($id, true));
+                // Log::debug('musics: ' . print_r($musics, true));
+                // Log::debug('playlist->musics: ' . print_r($playlist->musics, true));
+
+                if(0 === count($musics)){
+                    $new_music = array();
+                }else{
+                    $new_music = (array)$musics;
+                }
+
+                if(0 === count($playlist->musics)){
+                    $old_music = array();
+                } else {
+                    foreach ($playlist->musics as $value) {
+                        $old_music[] = $value->id;
+                    }
+                }
+
+                Log::debug('old_music: ' . print_r($old_music, true));
+                Log::debug('new_music: ' . print_r($new_music, true));
+
+                $add = array_diff($new_music, $old_music);
+                $remove = array_diff($old_music, $new_music);
+                Log::debug('add: ' . print_r($add, true));
+                Log::debug('remove: ' . print_r($remove, true));
+
+                $playlist->saveMusics($id, $add, $remove);
+            }
+
+        return view('playlist.show', ['playlist' => $playlist]);
+
         }else{
             return redirect()
                 ->back()
