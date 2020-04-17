@@ -22,7 +22,14 @@ class Playlist extends Model
     public function saveMusics(int $id, array $add, array $remove)
     {
         $playlist = $this->find($id);
-        $playlist->musics()->detach($remove);
-        return $playlist->musics()->attach($add);
+        if(count($remove)){
+            $playlist->musics()->detach($remove);
+        }
+        if(count($add)){
+            $playlist->musics()->attach($add);
+        }
+
+        $playlist = Playlist::where('id', $id)->with('musics')->first();
+        return $playlist;
     }
 }

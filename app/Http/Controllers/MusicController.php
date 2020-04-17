@@ -119,7 +119,7 @@ class MusicController extends Controller
 
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
-            'audio' => 'mimes:mp3,mpga',
+            'audios.*' => 'mimes:mp3,mpga',
         ]);
 
         if ($request->hasFile('audios')) {
