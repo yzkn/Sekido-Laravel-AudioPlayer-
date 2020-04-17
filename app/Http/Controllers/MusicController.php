@@ -119,38 +119,53 @@ class MusicController extends Controller
 
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
-            'audios.*' => 'mimes:mp3,mpga',
+            'audios.*' => 'mimes:mp3,mpga,jpeg,png',
         ]);
 
         if ($request->hasFile('audios')) {
+            $image_path = '';
+            foreach ($request->file('audios') as $index=> $audio) {
+                if ($audio->isValid()) {
+                    if(strpos($audio->getMimeType(), 'image') === 0){
+                        $stored = basename($audio->store('public/covers'));
+                        Log::debug('stored: ' . $stored);
+                        $image_path = '/storage/covers/' . $stored;
+                        break;
+                    }
+                }
+            }
+
             foreach ($request->file('audios') as $index=> $audio) {
                 if ($audio->isValid()) {
                     Log::debug('audio: ' . print_r($audio, true));
                     $stored = basename($audio->store('public/musics'));
                     Log::debug('stored: ' . $stored);
 
-                    $path = $audio->path();
-                    Log::debug('path: ' . $path);
+                    if(strpos($audio->getMimeType(), 'audio') === 0){
+                        Log::debug('path: ' . $audio->path());
 
-                    $getID3 = new \getID3();
-                    $tag = $getID3->analyze($path);
+                        $getID3 = new \getID3();
+                        $tag = $getID3->analyze($audio->path());
 
-                    $music = new Music;
+                        $music = new Music;
 
-                    $music->path = '/storage/musics/' . $stored;
+                        $music->path = '/storage/musics/' . $stored;
 
-                    $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8',$FROM_ENC) ?? '';
-                    $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8',$FROM_ENC) ?? '';
-                    $music->bitrate = $tag['bitrate'] ?? '';
-                    $music->cover = '';
-                    $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8',$FROM_ENC) ?? '';
-                    $music->originalArtist = '';
-                    $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
-                    $music->related_works = '';
-                    $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8',$FROM_ENC) ?? '';
-                    $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
-                    $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
-                    $music->save();
+                        $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8',$FROM_ENC) ?? '';
+                        $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8',$FROM_ENC) ?? '';
+                        $music->bitrate = $tag['bitrate'] ?? '';
+                        $music->cover = $image_path ?? '';
+                        $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8',$FROM_ENC) ?? '';
+                        $music->originalArtist = '';
+                        $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
+                        $music->related_works = '';
+                        $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8',$FROM_ENC) ?? '';
+                        $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
+                        $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
+                        $music->save();
+
+                        $music_array[] = $music->id;
+                    }
                 }
             }
         }

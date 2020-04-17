@@ -12,7 +12,7 @@
                     <div class="col">
                         <form method="POST" action="{{ url('music/') }}" enctype="multipart/form-data" >
                             {{ csrf_field() }}
-                            <div class="input-group">
+                            <div class="input-group" title="音楽ファイルと一緒に画像ファイルを1つ指定することでカバーアートとして登録できます。">
                                 <label class="input-group-btn">
                                     <span class="btn btn-outline-primary">
                                         Choose File<input type="file" style="display:none" name="audios[]" multiple>
