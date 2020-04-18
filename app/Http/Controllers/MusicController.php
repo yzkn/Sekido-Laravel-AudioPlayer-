@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Music;
 use App\Playlist;
 
@@ -261,10 +262,17 @@ class MusicController extends Controller
                     Log::debug('path: ' . $path);
                     $music->document = '/storage/documents/' . $stored;
 
-                    //TODO: gen
                     if(null === $music->cover || '' === $music->cover){
-                        //
-                        $music->cover = 'hoge';
+                        Log::debug('extension_loaded(\'imagick\'): ' . extension_loaded('imagick'));
+                        $pdf_path = Storage::path('public').'/documents/'.$stored;
+                        $pdf_path = str_replace('/', '\\', $pdf_path);
+                        Log::debug('read: '.$pdf_path);
+                        $shell_cmd = 'magick -density 400 "'.$pdf_path.'" "'.$pdf_path.'.png"';
+                        Log::debug('shell_cmd: '.$shell_cmd);
+                        $output = shell_exec($shell_cmd);
+                        Log::debug('output: ' . print_r($output, true));
+
+                        $music->cover = $music->document.'.png';
                     }
                 }
             }

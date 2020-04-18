@@ -86,7 +86,11 @@
                                     @isset($music)
                                         @isset($music->document)
                                             @if('' !== $music->document)
-                                                <img src="{{ $music->document }}" alt="" class="img-thumbnail"><br>
+                                                <a href="{{ $music->document }}" target="_blank">
+                                                    <a href="{{ $music->document }}" target="_blank">
+                                                        {{ basename($music->document) }}
+                                                    </a>
+                                                </a>
                                             @endif
                                         @endisset
                                     @endisset

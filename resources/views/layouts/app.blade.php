@@ -120,11 +120,14 @@
                         <p class="mb-1">
                             {{ Auth::user()->name }}さんとしてログインしています。
                         </p>
-                        <p class="mb-1">
+                        <p class="mb-2">
                             ログイン時刻: {{ Auth::user()->last_login_at }}
                         </p>
-                        <p class="mb-1">
-                            {{ App\Music::where('user_id', '=', Auth::user()->id)->count() }}曲
+                        <p class="mb-0">
+                            アップロード: {{ App\Music::where('user_id', '=', Auth::user()->id)->count() }}曲
+                        </p>
+                        <p class="mb-2">
+                            プレイリスト: {{ App\Playlist::where('user_id', '=', Auth::user()->id)->count() }}件
                         </p>
                     </div>
                     @if ('/music/search' === str_replace(url('/'),"",\Request::fullUrl()) )
