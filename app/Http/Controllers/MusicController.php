@@ -44,7 +44,7 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','random'
         ];
 
         $query = Music::query();
@@ -73,8 +73,11 @@ class MusicController extends Controller
                     ]
                 )
             ) {
-            Log::debug('sort_key: '.$request->sort_key);
+                Log::debug('sort_key: '.$request->sort_key);
                 $query->orderBy($request->sort_key, (strpos($request->sort_key, '-') === 0 ) ? 'desc' : 'asc');
+            }else if ('random' === $request->get('sort_key')){
+                Log::debug('sort_key: '.$request->sort_key);
+                $query->inRandomOrder(strtotime('today'));
             }
         }
 
@@ -82,7 +85,7 @@ class MusicController extends Controller
 
         Log::debug('request: '.print_r($request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key']), true));
 
-        return view('music.search', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
+        return view('music.index', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
     }
 
     public function searchform()
@@ -96,7 +99,7 @@ class MusicController extends Controller
             '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
         ];
 
-        return view('music.search', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list]);
+        return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list]);
     }
 
     /**
@@ -129,9 +132,12 @@ class MusicController extends Controller
             foreach ($request->file('audios') as $index=> $audio) {
                 if ($audio->isValid()) {
                     if(strpos($audio->getMimeType(), 'image') === 0){
+                        Log::debug('audio: ' . print_r($audio, true));
                         $stored = basename($audio->store('public/covers'));
                         Log::debug('stored: ' . $stored);
+
                         $image_path = '/storage/covers/' . $stored;
+                        Log::debug('image_path: ' . $image_path);
                         break;
                     }
                 }
@@ -164,6 +170,7 @@ class MusicController extends Controller
                         $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0],'UTF-8',$FROM_ENC) ?? '';
                         $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
                         $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
+                        $music->user_id = Auth::user()->id;
                         $music->save();
 
                         $music_array[] = $music->id;
@@ -251,8 +258,6 @@ class MusicController extends Controller
             $music->related_works = $request->related_works ?? '';
             $music->year = $request->year ?? '';
             $music->save();
-
-
 
             $playlists = $request->playlists ?? [];
             unset($request['playlists']);

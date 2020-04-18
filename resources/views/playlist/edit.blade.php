@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Edit - {{ $playlist->id }}</div>
                 <div class="card-body">
@@ -19,6 +19,15 @@
                                 <div class="col-sm-4 my-2">{{ __('Description') }}</div>
                                 <div class="col-sm-8 my-2">
                                     <input type="text" class="form-control" id="description" name="artist" value="{{ old('description', isset($playlist) ? $playlist->description : '') }}" placeholder="{{ __('Description') }}">
+                                </div>
+                                <div class="col-sm-4 my-2">{{ __('Cover') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    @isset($playlist)
+                                        @isset($playlist->cover)
+                                            <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
+                                        @endisset
+                                    @endisset
+                                    <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($playlist) ? $playlist->cover : '') }}" placeholder="{{ __('Cover') }}">
                                 </div>
                                 <div class="col-sm-4 my-2">{{ __('Musics') }}</div>
                                 <div class="col-sm-8 my-2">

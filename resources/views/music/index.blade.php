@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Player</h1>
                     <div class="row mt-3 justify-content-center">
@@ -38,33 +38,6 @@
                 </ol>
             </div>
         @endcan
-
-        @can('admin-higher') {{-- 管理者権限以上に表示される --}}
-            <div class="col-md-8 my-5">
-                <div class="card">
-                    <div class="card-header">Admin menu</div>
-
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <li class="list-group-item"><a href="{{ url('/music/upload') }}">{{ __('Upload') }}</a></li>
-                            </ul>
-                        </div>
-                </div>
-            </div>
-        @endcan
-
-        <div class="col-md-8 my-10"><br><br><br><br><br><br><br><br><br><br></div>
-
-        <div class="col-md-8" id="shortcuts">
-            <div class="row">
-                <div class="col">
-                    <h1>Keyboard shortcuts:</h1>
-                    <p><em>&rarr;</em> Next track</p>
-                    <p><em>&larr;</em> Previous track</p>
-                    <p><em>Space</em> Play/pause</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

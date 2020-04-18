@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Playlist</h1>
                     <hr class="my-4">

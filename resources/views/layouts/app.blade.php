@@ -108,69 +108,146 @@
         @endif
 
         <div class="row">
-            <div class="col-md-8 main">
+            <div class="col-md-6 offset-md-1 main">
                 <main class="py-4">
                     @yield('content')
                 </main>
             </div>
             @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-                <aside class="col-md-2 py-4 sidebar">
+                <aside class="col-md-3 offset-md-1 py-4 sidebar">
                     <div class="p-4 my-5">
                         <h4 class="font-italic">概要</h4>
-                        <p class="mb-0">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</p>
+                        <p class="mb-1">
+                            {{ Auth::user()->name }}さんとしてログインしています。
+                        </p>
+                        <p class="mb-1">
+                            ログイン時刻: {{ Auth::user()->last_login_at }}
+                        </p>
+                        <p class="mb-1">
+                            {{ App\Music::where('user_id', '=', Auth::user()->id)->count() }}曲
+                        </p>
                     </div>
+                    @if ('/music/search' === str_replace(url('/'),"",\Request::fullUrl()) )
+                        <div class="p-4 mb-3">
+                            <form method="POST" action="{{ url('music/search') }}" enctype="multipart/form-data" >
+                                {{ csrf_field() }}
+                                <div class="row">
+                                    <div class="col-sm-4 my-2">{{ __('Title') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="title" name="title" value="{{(isset($request) && isset($request['title'])) ? $request['title'] : ''}}" placeholder="{{ __('Title') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Artist') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="artist" name="artist" value="{{(isset($request) && isset($request['artist'])) ? $request['artist'] : ''}}" placeholder="{{ __('Artist') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Album') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="album" name="album" value="{{(isset($request) && isset($request['album'])) ? $request['album'] : ''}}" placeholder="{{ __('Album') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Track number') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="number" class="form-control" id="track_num" name="track_num" value="{{(isset($request) && isset($request['track_num'])) ? $request['track_num'] : ''}}" placeholder="{{ __('Track number') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Genre') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="genre" name="genre" list="genre_list" value="{{(isset($request) && isset($request['genre'])) ? $request['genre'] : ''}}" placeholder="{{ __('Genre') }}">
+                                        <datalist id="genre_list">
+                                            @foreach($genre_list as $index => $name)
+                                                <option value="{{ $name }}">{{ $name}} </option>
+                                            @endforeach
+                                        </datalist>
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Original Artist') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="originalArtist" name="originalArtist" value="{{(isset($request) && isset($request['originalArtist'])) ? $request['originalArtist'] : ''}}" placeholder="{{ __('Original Artist') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Playtime') }}</div>
+                                    <div class="col-sm-6 my-2">
+                                        <input type="number" class="form-control" id="playtime_seconds_min" name="playtime_seconds_min" value="{{(isset($request) && isset($request['playtime_seconds_min'])) ? $request['playtime_seconds_min'] : ''}}" placeholder="{{ __('Playtime(min)') }}">
+                                    </div>
+                                    <div class="col-sm-2 my-2 d-flex align-items-end">{{ __('seconds') }}</div>
 
-                    <div class="p-4 mb-3">
-                        <h4>曲</h4>
+                                    <div class="col-sm-6 my-2 offset-sm-4">
+                                        <input type="number" class="form-control" id="playtime_seconds_max" name="playtime_seconds_max" value="{{(isset($request) && isset($request['playtime_seconds_max'])) ? $request['playtime_seconds_max'] : ''}}" placeholder="{{ __('Playtime(max)') }}">
+                                    </div>
+                                    <div class="col-sm-2 my-2 d-flex align-items-end">{{ __('seconds') }}</div>
 
-                        <h5>カバーアート</h5>
-                        <div class="cover-cloud mb-3">
-                            @foreach (App\Music::select('cover')->groupBy('cover')->having('cover', '<>', '')->get() as $key => $music)
-                                <div class="cover-cloud-item" style="display:inline;">
-                                    <a href="#" onclick="event.preventDefault();document.getElementById('music-search-cover-form-{{ $key }}').submit();">
-                                        <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail">
-                                    </a>
-                                    <form id="music-search-cover-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
-                                        style="display: none;">
-                                        @csrf
-                                        <input type="hidden" name="cover" value="{{ $music->cover }}">
-                                    </form>
+                                    <div class="col-sm-4 my-2">{{ __('Related works') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="related_works" name="related_works" value="{{(isset($request) && isset($request['related_works'])) ? $request['related_works'] : ''}}" placeholder="{{ __('Related works') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Year') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="number" class="form-control" id="year" name="year" value="{{(isset($request) && isset($request['year'])) ? $request['year'] : ''}}" placeholder="{{ __('Year') }}">
+                                    </div>
+                                    <div class="col-sm-4 my-2">{{ __('Created at') }}</div>
+                                    <div class="col-sm-8 my-2">
+                                        <input type="text" class="form-control" id="created_at" name="created_at" value="{{(isset($request) && isset($request['created_at'])) ? $request['created_at'] : ''}}" placeholder="{{ (new DateTime())->format('Y-m') }}">
+                                    </div>
+                                    <div class="mt-5 col-sm-8 offset-sm-4">
+                                        <select id="sort_key" name="sort_key">
+                                            @foreach($sort_list as $index => $name)
+                                                <option value="{{ $name }}" @if(old('sort_list') == $name) selected @endif>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" name="submit" class="btn btn-outline-primary">{{ __('Search') }}</a>
+                                    </div>
                                 </div>
-                            @endforeach
+                            </form>
                         </div>
+                    @else
+                        <div class="p-4 mb-3">
+                            <h4>曲</h4>
 
-                        <h5>最近追加</h5>
-                        <ul class="list-group mb-3">
-                            @foreach (App\Music::latest()->limit(5)->get() as $music)
-                                <li class="list-group-item"><a href="{{ url('music/'.$music->id) }}">{{ $music->title }}</a></li>
-                            @endforeach
-                        </ul>
+                            <h5>カバーアート</h5>
+                            <div class="cover-cloud mb-3">
+                                @foreach (App\Music::select('cover')->groupBy('cover')->having('cover', '<>', '')->get() as $key => $music)
+                                    <div class="cover-cloud-item" style="display:inline;">
+                                        <a href="#" onclick="event.preventDefault();document.getElementById('music-search-cover-form-{{ $key }}').submit();">
+                                            <img src="{{ $music->cover }}" class="img-thumbnail cover-cloud-item-thumbnail">
+                                        </a>
+                                        <form id="music-search-cover-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                            <input type="hidden" name="cover" value="{{ $music->cover }}">
+                                        </form>
+                                    </div>
+                                @endforeach
+                            </div>
 
-                        <h5>登録年月</h5>
-                        <ul class="list-group mb-3">
-                            @for ($i = 0; $i > -6; $i--)
-                                <li class="list-group-item">
-                                    <a href="#" onclick="event.preventDefault();document.getElementById('music-search-createdat-form-{{ $i }}').submit();">
-                                        {{ (new DateTime())->modify($i.' month')->format('Y年m月') }}
-                                    </a>
-                                    <form id="music-search-createdat-form-{{ $i }}" action="{{ url('music/search') }}" method="POST"
-                                        style="display: none;">
-                                        @csrf
-                                        <input type="hidden" name="created_at" value="{{ (new DateTime())->modify($i.' month')->format('Y-m') }}">
-                                    </form>
-                                </li>
-                            @endfor
-                        </ul>
-                    </div>
-                    <div class="p-4 mb-3">
-                        <h4>プレイリスト</h4>
-                        <h5>最近追加</h5>
-                        <ul class="list-group mb-3">
-                            @foreach (App\Playlist::latest()->limit(3)->get() as $playlist)
-                                <li class="list-group-item"><a href="{{ url('playlist/'.$playlist->id) }}">{{ $playlist->title }}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
+                            <h5>最近追加</h5>
+                            <ul class="list-group mb-3">
+                                @foreach (App\Music::latest()->limit(5)->get() as $music)
+                                    <li class="list-group-item"><a href="{{ url('music/'.$music->id) }}">{{ $music->artist }} / {{ $music->title }}</a></li>
+                                @endforeach
+                            </ul>
+
+                            <h5>登録年月</h5>
+                            <ul class="list-group mb-3">
+                                @for ($i = 0; $i > -6; $i--)
+                                    <li class="list-group-item">
+                                        <a href="#" onclick="event.preventDefault();document.getElementById('music-search-createdat-form-{{ $i }}').submit();">
+                                            {{ (new DateTime())->modify($i.' month')->format('Y年m月') }}
+                                        </a>
+                                        <form id="music-search-createdat-form-{{ $i }}" action="{{ url('music/search') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                            <input type="hidden" name="created_at" value="{{ (new DateTime())->modify($i.' month')->format('Y-m') }}">
+                                        </form>
+                                    </li>
+                                @endfor
+                            </ul>
+                        </div>
+                        <div class="p-4 mb-3">
+                            <h4>プレイリスト</h4>
+                            <h5>最近追加</h5>
+                            <ul class="list-group mb-3">
+                                @foreach (App\Playlist::latest()->limit(3)->get() as $playlist)
+                                    <li class="list-group-item"><a href="{{ url('playlist/'.$playlist->id) }}">{{ $playlist->title }}</a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </aside>
             @endcan
         </div>

@@ -21,6 +21,7 @@ class CreateMusicsTable extends Migration
             $table->string('artist')->nullable();
             $table->string('bitrate')->nullable();
             $table->string('cover')->nullable();
+            $table->string('document')->nullable();
             $table->string('genre')->nullable();
             $table->string('originalArtist')->nullable();
             $table->string('playtime_seconds')->nullable();
@@ -29,6 +30,10 @@ class CreateMusicsTable extends Migration
             $table->string('year')->nullable();
             $table->timestamps();
             $table->tinyInteger('track_num')->nullable();
+
+            $table->unsignedInteger('user_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // 外部キー制約
         });
     }
 

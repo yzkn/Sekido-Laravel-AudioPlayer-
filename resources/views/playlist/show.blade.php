@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Detail - {{ $playlist->id ?? '' }}</div>
                     <div class="card-body">
@@ -15,6 +15,14 @@
                                 <div class="col-sm-8 my-2">{{ $playlist->title ?? '' }}</div>
                                 <div class="col-sm-4 my-2">{{ __('Description') }}</div>
                                 <div class="col-sm-8 my-2">{{ $playlist->description ?? '' }}</div>
+                                <div class="col-sm-4 my-2">{{ __('Cover') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    @isset($playlist)
+                                        @isset($playlist->cover)
+                                            <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
+                                        @endisset
+                                    @endisset
+                                </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
                                     @isset($playlist)
                                         @isset($playlist->id)
@@ -80,19 +88,6 @@
                 </div>
             </div>
         @endcan
-
-        <div class="col-md-8 my-10"><br><br><br><br><br><br><br><br><br><br></div>
-
-        <div class="col-md-8" id="shortcuts">
-            <div class="row">
-                <div class="col">
-                    <h1>Keyboard shortcuts:</h1>
-                    <p><em>&rarr;</em> Next track</p>
-                    <p><em>&larr;</em> Previous track</p>
-                    <p><em>Space</em> Play/pause</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

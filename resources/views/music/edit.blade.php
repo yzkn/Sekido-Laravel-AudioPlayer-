@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="/css/audio.css">
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Edit - {{ $music->id }}</div>
                 <div class="card-body">
@@ -74,7 +74,7 @@
                                 <div class="col-sm-8 my-2">
                                     @isset($music)
                                         @isset($music->cover)
-                                            <img src="{{ $music->cover }}" alt=""><br>
+                                            <img src="{{ $music->cover }}" alt="" class="img-thumbnail"><br>
                                         @endisset
                                     @endisset
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($music) ? $music->cover : '') }}" placeholder="{{ __('Cover') }}">

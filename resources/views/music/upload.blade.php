@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         @can('admin-higher') {{-- 管理者権限以上に表示される --}}
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="jumbotron mt-4">
                     <h1 class="display-4">Upload</h1>
                     <hr class="my-4">

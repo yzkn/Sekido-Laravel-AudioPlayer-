@@ -44,6 +44,21 @@ class PlaylistController extends Controller
     public function store(Request $request)
     {
         $playlist = new Playlist;
+
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+            Log::debug('cover: ' . print_r($cover, true));
+            if ($cover->isValid([])) {
+                Log::debug('cover: ' . print_r($cover, true));
+                $stored = basename($cover->store('public/covers'));
+                Log::debug('stored: ' . $stored);
+
+                $path = $cover->path();
+                Log::debug('path: ' . $path);
+                $playlist->cover = '/storage/covers/' . $stored;
+            }
+        }
+
         $playlist->description = $request->description;
         $playlist->title = $request->title;
         $playlist->user_id = Auth::user()->id;
@@ -128,6 +143,21 @@ class PlaylistController extends Controller
     {
         $playlist = Playlist::where('id', $id)->first();
         if($playlist){
+
+            if ($request->hasFile('cover')) {
+                $cover = $request->file('cover');
+                Log::debug('cover: ' . print_r($cover, true));
+                if ($cover->isValid([])) {
+                    Log::debug('cover: ' . print_r($cover, true));
+                    $stored = basename($cover->store('public/covers'));
+                    Log::debug('stored: ' . $stored);
+
+                    $path = $cover->path();
+                    Log::debug('path: ' . $path);
+                    $playlist->cover = '/storage/covers/' . $stored;
+                }
+            }
+
             $playlist->title = $request->title ?? '';
             $playlist->description = $request->description ?? '';
 
