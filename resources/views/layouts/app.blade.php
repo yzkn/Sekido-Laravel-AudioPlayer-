@@ -107,9 +107,74 @@
             </div>
         @endif
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <div class="row">
+            <div class="col-md-8 main">
+                <main class="py-4">
+                    @yield('content')
+                </main>
+            </div>
+            @can('user-higher') {{-- ユーザー権限以上に表示される --}}
+                <aside class="col-md-2 py-4 sidebar">
+                    <div class="p-4 my-5">
+                        <h4 class="font-italic">概要</h4>
+                        <p class="mb-0">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</p>
+                    </div>
+
+                    <div class="p-4 mb-3">
+                        <h4>曲</h4>
+
+                        <h5>カバーアート</h5>
+                        <div class="cover-cloud mb-3">
+                            @foreach (App\Music::select('cover')->groupBy('cover')->having('cover', '<>', '')->get() as $key => $music)
+                                <div class="cover-cloud-item" style="display:inline;">
+                                    <a href="#" onclick="event.preventDefault();document.getElementById('music-search-cover-form-{{ $key }}').submit();">
+                                        <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail">
+                                    </a>
+                                    <form id="music-search-cover-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="cover" value="{{ $music->cover }}">
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <h5>最近追加</h5>
+                        <ul class="list-group mb-3">
+                            @foreach (App\Music::latest()->limit(5)->get() as $music)
+                                <li class="list-group-item"><a href="{{ url('music/'.$music->id) }}">{{ $music->title }}</a></li>
+                            @endforeach
+                        </ul>
+
+                        <h5>登録年月</h5>
+                        <ul class="list-group mb-3">
+                            @for ($i = 0; $i > -6; $i--)
+                                <li class="list-group-item">
+                                    <a href="#" onclick="event.preventDefault();document.getElementById('music-search-createdat-form-{{ $i }}').submit();">
+                                        {{ (new DateTime())->modify($i.' month')->format('Y年m月') }}
+                                    </a>
+                                    <form id="music-search-createdat-form-{{ $i }}" action="{{ url('music/search') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="created_at" value="{{ (new DateTime())->modify($i.' month')->format('Y-m') }}">
+                                    </form>
+                                </li>
+                            @endfor
+                        </ul>
+                    </div>
+                    <div class="p-4 mb-3">
+                        <h4>プレイリスト</h4>
+                        <h5>最近追加</h5>
+                        <ul class="list-group mb-3">
+                            @foreach (App\Playlist::latest()->limit(3)->get() as $playlist)
+                                <li class="list-group-item"><a href="{{ url('playlist/'.$playlist->id) }}">{{ $playlist->title }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </aside>
+            @endcan
+        </div>
     </div>
+
 </body>
 </html>

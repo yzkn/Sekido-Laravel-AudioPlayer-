@@ -44,12 +44,12 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
         ];
 
         $query = Music::query();
         // 'playtime_seconds_min', 'playtime_seconds_max'は別途
-        foreach ($request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
+        foreach ($request->only(['album','artist','cover','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
             if(($request->get($key))){
                 $query->where($key, 'like', '%'.$value.'%');
             }
@@ -68,7 +68,8 @@ class MusicController extends Controller
                 in_array(
                     $request->get('sort_key'),
                     [
-                        'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+                        'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds',
+                        '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
                     ]
                 )
             ) {
@@ -79,9 +80,9 @@ class MusicController extends Controller
 
         $musics = $query->get();
 
-        Log::debug('request: '.print_r($request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key']), true));
+        Log::debug('request: '.print_r($request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key']), true));
 
-        return view('music.search', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
+        return view('music.search', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
     }
 
     public function searchform()
@@ -91,7 +92,8 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album', 'artist','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album', '-artist','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds',
+            '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
         ];
 
         return view('music.search', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list]);

@@ -59,7 +59,11 @@
                                 </div>
                                 <div class="col-sm-4 my-2">{{ __('Year') }}</div>
                                 <div class="col-sm-8 my-2">
-                                    <input type="number" class="form-control" id="num" name="year" value="{{(isset($request) && isset($request['year'])) ? $request['year'] : ''}}" placeholder="{{ __('Year') }}">
+                                    <input type="number" class="form-control" id="year" name="year" value="{{(isset($request) && isset($request['year'])) ? $request['year'] : ''}}" placeholder="{{ __('Year') }}">
+                                </div>
+                                <div class="col-sm-4 my-2">{{ __('Created at') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    <input type="text" class="form-control" id="created_at" name="created_at" value="{{(isset($request) && isset($request['created_at'])) ? $request['created_at'] : ''}}" placeholder="{{ (new DateTime())->format('Y-m') }}">
                                 </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
                                     <select id="sort_key" name="sort_key">
