@@ -49,7 +49,7 @@ class MusicController extends Controller
 
         $query = Music::query();
         // 'playtime_seconds_min', 'playtime_seconds_max'は別途
-        foreach ($request->only(['album','artist','cover','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
+        foreach ($request->only(['album','artist','cover','document','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
             if(($request->get($key))){
                 $query->where($key, 'like', '%'.$value.'%');
             }
@@ -163,6 +163,7 @@ class MusicController extends Controller
                         $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8',$FROM_ENC) ?? '';
                         $music->bitrate = $tag['bitrate'] ?? '';
                         $music->cover = $image_path ?? '';
+                        $music->document = '';
                         $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0],'UTF-8',$FROM_ENC) ?? '';
                         $music->originalArtist = '';
                         $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
@@ -227,7 +228,8 @@ class MusicController extends Controller
     {
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
-            'audio' => 'mimes:jpeg,png|dimensions:min_width=1,min_height=1,max_width=500,max_height=500',
+            'cover' => 'mimes:jpeg,png|dimensions:min_width=1,min_height=1,max_width=500,max_height=500',
+            'document' => 'mimes:txt,pdf',
         ]);
 
         $music = Music::where('id', $id)->first();
@@ -244,6 +246,26 @@ class MusicController extends Controller
                     $path = $cover->path();
                     Log::debug('path: ' . $path);
                     $music->cover = '/storage/covers/' . $stored;
+                }
+            }
+
+            if ($request->hasFile('document')) {
+                $document = $request->file('document');
+                Log::debug('document: ' . print_r($document, true));
+                if ($document->isValid([])) {
+                    Log::debug('document: ' . print_r($document, true));
+                    $stored = basename($document->store('public/documents'));
+                    Log::debug('stored: ' . $stored);
+
+                    $path = $document->path();
+                    Log::debug('path: ' . $path);
+                    $music->document = '/storage/documents/' . $stored;
+
+                    //TODO: gen
+                    if(null === $music->cover || '' === $music->cover){
+                        //
+                        $music->cover = 'hoge';
+                    }
                 }
             }
 

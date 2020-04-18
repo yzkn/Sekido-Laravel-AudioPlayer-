@@ -24,7 +24,9 @@
                                 <div class="col-sm-8 my-2">
                                     @isset($playlist)
                                         @isset($playlist->cover)
-                                            <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
+                                            @if('' !== $playlist->cover)
+                                                <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
+                                            @endif
                                         @endisset
                                     @endisset
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($playlist) ? $playlist->cover : '') }}" placeholder="{{ __('Cover') }}">

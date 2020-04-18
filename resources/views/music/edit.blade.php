@@ -74,10 +74,23 @@
                                 <div class="col-sm-8 my-2">
                                     @isset($music)
                                         @isset($music->cover)
-                                            <img src="{{ $music->cover }}" alt="" class="img-thumbnail"><br>
+                                            @if('' !== $music->cover)
+                                                <img src="{{ $music->cover }}" alt="" class="img-thumbnail"><br>
+                                            @endif
                                         @endisset
                                     @endisset
                                     <input type="file" class="form-control" id="cover" name="cover" value="{{ old('cover', isset($music) ? $music->cover : '') }}" placeholder="{{ __('Cover') }}">
+                                </div>
+                                <div class="col-sm-4 my-2">{{ __('Document') }}</div>
+                                <div class="col-sm-8 my-2">
+                                    @isset($music)
+                                        @isset($music->document)
+                                            @if('' !== $music->document)
+                                                <img src="{{ $music->document }}" alt="" class="img-thumbnail"><br>
+                                            @endif
+                                        @endisset
+                                    @endisset
+                                    <input type="file" class="form-control" id="document" name="document" value="{{ old('document', isset($music) ? $music->document : '') }}" placeholder="{{ __('Document') }}">
                                 </div>
                                 <div class="mt-5 col-sm-8 offset-sm-4">
                                     <button type="submit" name="submit" class="btn btn-outline-primary">{{ __('Update') }}</button>
