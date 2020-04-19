@@ -2,6 +2,7 @@
 
 @section('content')
 <link rel="stylesheet" type="text/css" href="{{ asset('css/audio.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/marquee.css') }}">
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
@@ -43,19 +44,15 @@
                 </div>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Player</h1>
                     <div class="row mt-3 justify-content-center">
                         <audio autoplay preload="auto"></audio>
                     </div>
                     <div class="row mt-1 col-sm-9 offset-sm-3">
-                        <div class="marquee">
-                            <p>
-                                <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
-                                <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
-                            </p>
-                        </div>
+                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
+                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
                     </div>
                 </div>
 
@@ -78,20 +75,6 @@
                         </li>
                     @endforeach
                 </ol>
-            </div>
-        @endcan
-
-        @can('admin-higher') {{-- 管理者権限以上に表示される --}}
-            <div class="col-md-8 my-5">
-                <div class="card">
-                    <div class="card-header">Admin menu</div>
-
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <li class="list-group-item"><a href="{{ url('/music/upload') }}">{{ __('Upload') }}</a></li>
-                            </ul>
-                        </div>
-                </div>
             </div>
         @endcan
     </div>

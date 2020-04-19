@@ -2,7 +2,7 @@
 
 @section('content')
 <link rel="stylesheet" type="text/css" href="{{ asset('css/audio.css') }}">
-<link rel="stylesheet" type="text/css" href="/css/marquee.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/marquee.css') }}">
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
