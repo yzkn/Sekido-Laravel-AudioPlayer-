@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="/css/audio.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/audio.css') }}">
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -88,8 +88,8 @@
     </div>
 </div>
 
-<script src="/js/jquery.js"></script>
-<script src="/js/audio.js"></script>
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('js/audio.js') }}"></script>
 <script>
     audiojs.events.ready(function() {
         var as = audiojs.createAll();

@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/bubbly.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -22,75 +23,73 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand px-5" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel-AudioPlayer') }}
+            </a>
+            <button class="navbar-toggler px-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+            <div class="collapse navbar-collapse px-5" id="navbarSupportedContent">
+                <!-- Left Side Of Navbar -->
+                <ul class="navbar-nav mr-auto">
 
-                    </ul>
+                </ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Authentication Links -->
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ __('Music') }} <span class="caret"></span>
+                        @endif
+                    @else
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ __('Music') }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link" href="{{ url('music') }}">{{ __('List') }}</a></li>
+                                <li><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
+                                <li><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ __('Playlist') }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link" href="{{ url('playlist') }}">{{ __('List') }}</a></li>
+                                <li><a class="nav-link" href="{{ url('playlist/create') }}">{{ __('Create') }}</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="nav-link" href="{{ url('music') }}">{{ __('List') }}</a></li>
-                                    <li><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
-                                    <li><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
-                                </ul>
-                            </li>
 
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ __('Playlist') }} <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="nav-link" href="{{ url('playlist') }}">{{ __('List') }}</a></li>
-                                    <li><a class="nav-link" href="{{ url('playlist/create') }}">{{ __('Create') }}</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                    @endguest
+                </ul>
             </div>
         </nav>
 
@@ -114,8 +113,8 @@
                 </main>
             </div>
             @can('user-higher') {{-- ユーザー権限以上に表示される --}}
-                <aside class="col-md-3 offset-md-1 py-4 sidebar">
-                    <div class="p-4 my-5">
+                <aside class="col-md-3 offset-md-1 my-5 p-4 sidebar bg-light rounded">
+                    <div class="p-4 my-1">
                         <h4 class="font-italic">概要</h4>
                         <p class="mb-1">
                             {{ Auth::user()->name }}さんとしてログインしています。
@@ -130,7 +129,7 @@
                             プレイリスト: {{ App\Playlist::where('user_id', '=', Auth::user()->id)->count() }}件
                         </p>
                     </div>
-                    @if ('/music/search' === str_replace(url('/'),"",\Request::fullUrl()) )
+                    @if ('/music/search' === explode('?', str_replace(url('/'),"",\Request::fullUrl()))[0] )
                         <div class="p-4 mb-3">
                             <form method="POST" action="{{ url('music/search') }}" enctype="multipart/form-data" >
                                 {{ csrf_field() }}
@@ -200,7 +199,7 @@
                         </div>
                     @else
                         <div class="p-4 mb-3">
-                            <h4>曲</h4>
+                            <h4 class="font-italic">曲</h4>
 
                             <h5>カバーアート</h5>
                             <div class="cover-cloud mb-3">
@@ -242,7 +241,7 @@
                             </ul>
                         </div>
                         <div class="p-4 mb-3">
-                            <h4>プレイリスト</h4>
+                            <h4 class="font-italic">プレイリスト</h4>
                             <h5>最近追加</h5>
                             <ul class="list-group mb-3">
                                 @foreach (App\Playlist::latest()->limit(3)->get() as $playlist)
@@ -255,6 +254,6 @@
             @endcan
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bubbly-bg@1.0.0/dist/bubbly-bg.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="/css/audio.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/audio.css') }}">
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
@@ -72,7 +72,7 @@
                                     {{$music->artist}} / {{$music->title}}
                             </a>
                             <span>
-                                <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button>
+                                <!-- <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button> -->
                                 <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
                             </span>
                         </li>
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-<script src="/js/jquery.js"></script>
-<script src="/js/audio.js"></script>
-<script src="/js/audioapp.js"></script>
+<script src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('js/audio.js') }}"></script>
+<script src="{{ asset('js/audioapp.js') }}"></script>
 @endsection

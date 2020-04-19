@@ -1,9 +1,10 @@
 .marquee {
+    color: #666;
     width: 460px;
     margin-left: -36px;
     padding: 0.5em 0;
     overflow: hidden;
-    background-color: #f6f6f6;
+    background-color: #404040;
     margin-bottom: 10px;
     position: relative;
 }

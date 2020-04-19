@@ -29,7 +29,7 @@ class PlaylistController extends Controller
      */
     public function create()
     {
-        $musics = Music::get();
+        $musics = Music::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('musics: ' . $musics);
 
         return view('playlist.create', ['musics' => $musics]);
@@ -119,7 +119,7 @@ class PlaylistController extends Controller
      */
     public function edit($id)
     {
-        $musics = Music::get();
+        $musics = Music::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('musics: ' . $musics);
 
         $playlist = Playlist::where('id', $id)->first();

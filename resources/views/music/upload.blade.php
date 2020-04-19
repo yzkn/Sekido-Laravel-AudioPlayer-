@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="/css/audio.css">
 <div class="container">
     <div class="row justify-content-center">
         @can('admin-higher') {{-- 管理者権限以上に表示される --}}
@@ -28,7 +27,7 @@
         @endcan
     </div>
 </div>
-<script src="/js/jquery.js"></script>
+<script src="{{ asset('js/jquery.js') }}"></script>
 <script>
     FileList.prototype.map = function(){
         return Array.prototype.map.call(this, ...arguments)

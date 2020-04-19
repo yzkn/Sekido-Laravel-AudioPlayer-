@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="/css/audio.css">
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}

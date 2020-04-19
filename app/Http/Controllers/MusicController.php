@@ -89,7 +89,7 @@ class MusicController extends Controller
         return view('music.index', ['musics' => $musics, 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request->only(['album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds_min','playtime_seconds_max','sort_key'])]);
     }
 
-    public function searchform()
+    public function searchform(Request $request)
     {
         Log::debug(get_class($this).' '.__FUNCTION__.'()');
         Log::debug('User: '.Auth::user());
@@ -100,7 +100,7 @@ class MusicController extends Controller
             '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
         ];
 
-        return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list]);
+        return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request]);
     }
 
     /**
@@ -206,7 +206,7 @@ class MusicController extends Controller
     {
         $genre_list = \getid3_id3v1::ArrayOfGenres();
 
-        $playlists = Playlist::where('user_id', Auth::user()->id)->get();
+        $playlists = Playlist::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('playlists: ' . $playlists);
 
         $music = Music::where('id', $id)->first();
