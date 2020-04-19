@@ -203,7 +203,7 @@
 
                             <h5>カバーアート</h5>
                             <div class="cover-cloud mb-3">
-                                @foreach (App\Music::select('cover')->groupBy('cover')->having('cover', '<>', '')->inRandomOrder()->get() as $key => $music)
+                                @foreach (App\Music::select('cover')->where('user_id', Auth::user()->id)->groupBy('cover')->having('cover', '<>', '')->inRandomOrder()->get() as $key => $music)
                                     <div class="cover-cloud-item" style="display:inline;">
                                         <a href="#" onclick="event.preventDefault();document.getElementById('music-search-cover-form-{{ $key }}').submit();">
                                             <img src="{{ $music->cover }}" class="img-thumbnail cover-cloud-item-thumbnail">
@@ -219,7 +219,7 @@
 
                             <h5>最近追加</h5>
                             <ul class="list-group mb-3">
-                                @foreach (App\Music::latest()->limit(5)->get() as $music)
+                                @foreach (App\Music::where('user_id', Auth::user()->id)->latest()->limit(5)->get() as $music)
                                     <li class="list-group-item"><a href="{{ url('music/'.$music->id) }}">{{ $music->artist }} / {{ $music->title }}</a></li>
                                 @endforeach
                             </ul>

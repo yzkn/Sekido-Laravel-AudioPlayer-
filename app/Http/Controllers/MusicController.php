@@ -29,7 +29,7 @@ class MusicController extends Controller
         $token = auth('api')->login($user);
         Log::debug('token: ' . $token);
 
-        $musics = Music::get();
+        $musics = Music::where('user_id', Auth::user()->id)->get();
         Log::debug('musics: ' . $musics);
         // return view('music.index', ['musics' => $musics]);
         return response()
@@ -48,7 +48,7 @@ class MusicController extends Controller
             'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','random'
         ];
 
-        $query = Music::query();
+        $query = Music::where('user_id', Auth::user()->id)->query();
         // 'playtime_seconds_min', 'playtime_seconds_max'は別途
         foreach ($request->only(['album','artist','cover','document','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
             if(($request->get($key))){
@@ -192,7 +192,7 @@ class MusicController extends Controller
      */
     public function show($id)
     {
-        $music = Music::where('id', $id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         return view('music.show', ['music' => $music]);
     }
 
@@ -209,7 +209,7 @@ class MusicController extends Controller
         $playlists = Playlist::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('playlists: ' . $playlists);
 
-        $music = Music::where('id', $id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         $music_playlists = array();
         foreach ($music->playlists as $value) {
             $music_playlists[] = $value->id;
@@ -233,7 +233,7 @@ class MusicController extends Controller
             'document' => 'mimes:txt,pdf',
         ]);
 
-        $music = Music::where('id', $id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         if($music){
             Log::debug('music: ' . print_r($music, true));
             $older_music_cover = $music->cover;
@@ -344,7 +344,7 @@ class MusicController extends Controller
      */
     public function destroy($id)
     {
-        $music = Music::where('id', $id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         $music->delete();
         return redirect('music');
     }

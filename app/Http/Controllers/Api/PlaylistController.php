@@ -16,7 +16,7 @@ class PlaylistController extends Controller
         Log::debug('add');
         $playlist = Playlist::where('id', $playlist_id)->first();
         Log::debug('playlist: ' . $playlist);
-        $music = Music::where('id', $music_id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $music_id)->first();
         Log::debug('musics: ' . $music);
 
         if($playlist !== null && $music !== null ){
@@ -50,7 +50,7 @@ class PlaylistController extends Controller
         Log::debug('add');
         $playlist = Playlist::where('id', $playlist_id)->first();
         Log::debug('playlist: ' . $playlist);
-        $music = Music::where('id', $music_id)->first();
+        $music = Music::where('user_id', Auth::user()->id)->where('id', $music_id)->first();
         Log::debug('musics: ' . $music);
 
         if($playlist !== null && $music !== null ){
