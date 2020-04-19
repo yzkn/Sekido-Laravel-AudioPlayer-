@@ -48,7 +48,8 @@ class MusicController extends Controller
             'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','random'
         ];
 
-        $query = Music::where('user_id', Auth::user()->id)->query();
+        $query = Music::query();
+        $query->where('user_id', Auth::user()->id);
         // 'playtime_seconds_min', 'playtime_seconds_max'は別途
         foreach ($request->only(['album','artist','cover','document','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
             if(($request->get($key))){

@@ -10,8 +10,10 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bubbly-bg@1.0.0/dist/bubbly-bg.js"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/bubbly.js') }}" defer></script>
+    <script src="{{ asset('js/calendar.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -20,6 +22,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/audioapp.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/calendar.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -249,11 +252,16 @@
                                 @endforeach
                             </ul>
                         </div>
+                        <div class="p-4 mb-3">
+                            <h4 class="font-italic">今日は何の日？</h4>
+                            <div class="row">
+                                <div class="col-6 offset-3" id="month-calendar-current"></div>
+                            </div>
+                        </div>
                     @endif
                 </aside>
             @endcan
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bubbly-bg@1.0.0/dist/bubbly-bg.js"></script>
 </body>
 </html>
