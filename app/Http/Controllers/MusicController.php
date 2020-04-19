@@ -236,6 +236,8 @@ class MusicController extends Controller
         $music = Music::where('id', $id)->first();
         if($music){
             Log::debug('music: ' . print_r($music, true));
+            $older_music_cover = $music->cover;
+
             if ($request->hasFile('cover')) {
                 $cover = $request->file('cover');
                 Log::debug('cover: ' . print_r($cover, true));
@@ -259,11 +261,13 @@ class MusicController extends Controller
                     Log::debug('stored: ' . $stored);
 
                     $path = $document->path();
-                    Log::debug('path: ' . $path);
+                    Log::debug('$path: ' . $path);
+                    $older_document_path = $music->document;
+                    Log::debug('$older_document_path: ' . $older_document_path);
                     $music->document = '/storage/documents/' . $stored;
+                    Log::debug('$music->document: ' . $music->document);
 
-                    if(null === $music->cover || '' === $music->cover){
-                        Log::debug('extension_loaded(\'imagick\'): ' . extension_loaded('imagick'));
+                    if(null === $music->cover || '' === $music->cover || (strrpos($older_music_cover, '.pdf.png') === strlen($older_music_cover) - strlen('.pdf.png'))){
                         $pdf_path = Storage::path('public').'/documents/'.$stored;
                         $pdf_path = str_replace('/', '\\', $pdf_path);
                         Log::debug('read: '.$pdf_path);
@@ -272,7 +276,9 @@ class MusicController extends Controller
                         $output = shell_exec($shell_cmd);
                         Log::debug('output: ' . print_r($output, true));
 
-                        $music->cover = $music->document.'.png';
+                        if(file_exists ( $pdf_path.'.png' )){
+                            $music->cover = $music->document.'.png';
+                        }
                     }
                 }
             }

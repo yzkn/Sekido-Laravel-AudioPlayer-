@@ -50,8 +50,12 @@
                         <audio autoplay preload="auto"></audio>
                     </div>
                     <div class="row mt-1 col-sm-9 offset-sm-3">
-                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
-                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                        <div class="marquee">
+                            <p>
+                                <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
+                                <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                            </p>
+                        </div>
                     </div>
                 </div>
 

@@ -9,7 +9,7 @@
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Playlist</h1>
                     <hr class="my-4">
-                    <p class="lead text-right">
+                    <p class="lead text-right mt-4">
                         <a href="{{ url('playlist/create') }}" class="btn btn-outline-info">{{ __('Create') }}</a>
                     </p>
                 </div>

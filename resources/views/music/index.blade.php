@@ -2,18 +2,24 @@
 
 @section('content')
 <link rel="stylesheet" type="text/css" href="/css/audio.css">
+<link rel="stylesheet" type="text/css" href="/css/marquee.css">
 <div class="container">
     <div class="row justify-content-center">
         @can('user-higher') {{-- ユーザー権限以上に表示される --}}
             <div class="col-md-12">
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Player</h1>
+                    <hr class="my-4">
                     <div class="row mt-3 justify-content-center">
                         <audio autoplay preload="auto"></audio>
                     </div>
                     <div class="row mt-1 col-sm-9 offset-sm-3">
-                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
-                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                        <div class="marquee">
+                            <p>
+                                <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
+                                <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                            </p>
+                        </div>
                     </div>
                 </div>
 

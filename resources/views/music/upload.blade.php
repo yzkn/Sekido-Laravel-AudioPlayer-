@@ -6,10 +6,10 @@
     <div class="row justify-content-center">
         @can('admin-higher') {{-- 管理者権限以上に表示される --}}
             <div class="col-md-12">
-                <div class="jumbotron mt-4">
-                    <h1 class="display-4">Upload</h1>
+                <div class="jumbotron my-5">
+                    <h1 class="display-4 my-3">Upload</h1>
                     <hr class="my-4">
-                    <div class="col">
+                    <div class="col mt-4">
                         <form method="POST" action="{{ url('music/') }}" enctype="multipart/form-data" >
                             {{ csrf_field() }}
                             <div class="input-group" title="音楽ファイルと一緒に画像ファイルを1つ指定することでカバーアートとして登録できます。">
