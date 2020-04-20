@@ -19,15 +19,6 @@ Auth::routes();
 
 // 全員
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
-    // 楽曲一覧
-    Route::get('/music', 'MusicController@index')->name('music.index');
-
-    // プレイリストCRUD
-    Route::resource('/playlist', 'PlaylistController');
-});
-
-  // 管理者以上
-Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     // 検索
     Route::get('/music/search', 'MusicController@searchform')->name('music.searchform');
     Route::post('/music/search', 'MusicController@search')->name('music.search');
@@ -35,11 +26,22 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     // グループ化リスト
     Route::get('/music/list', 'MusicController@list')->name('music.list');
 
-    // ファイルアップロード
-    Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
-
     // 楽曲CRUD
     Route::resource('/music', 'MusicController');
+
+    // プレイリストCRUD
+    Route::resource('/playlist', 'PlaylistController');
+
+    // アップロードされたファイル
+    Route::get('/c/{path}', 'FileController@covers');
+    Route::get('/d/{path}', 'FileController@documents');
+    Route::get('/m/{path}', 'FileController@musics');
+});
+
+  // 管理者以上
+Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
+    // ファイルアップロード
+    Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
 });
 
   // システム管理者のみ

@@ -85,7 +85,7 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
         const row = $("<tr>");
         week.forEach((day, colIndex) => {
             const col = $("<td>").html(
-                '<a href="music/search?created_at=-' +
+                '<a href="/music/search?created_at=-' +
                     `${`0${month + 1}`.slice(-2)}` +
                     "-" +
                     `${`0${day}`.slice(-2)}` +

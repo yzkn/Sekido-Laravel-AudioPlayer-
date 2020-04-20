@@ -168,10 +168,10 @@ class MusicController extends Controller
                 if ($audio->isValid()) {
                     if(strpos($audio->getMimeType(), 'image') === 0){
                         Log::debug('audio: ' . print_r($audio, true));
-                        $stored = basename($audio->store('public/covers'));
+                        $stored = basename($audio->store('covers'));
                         Log::debug('stored: ' . $stored);
 
-                        $image_path = '/storage/covers/' . $stored;
+                        $image_path = '/c/' . $stored;
                         Log::debug('image_path: ' . $image_path);
                         break;
                     }
@@ -181,7 +181,7 @@ class MusicController extends Controller
             foreach ($request->file('audios') as $index=> $audio) {
                 if ($audio->isValid()) {
                     Log::debug('audio: ' . print_r($audio, true));
-                    $stored = basename($audio->store('public/musics'));
+                    $stored = basename($audio->store('musics'));
                     Log::debug('stored: ' . $stored);
 
                     if(strpos($audio->getMimeType(), 'audio') === 0){
@@ -192,7 +192,7 @@ class MusicController extends Controller
 
                         $music = new Music;
 
-                        $music->path = '/storage/musics/' . $stored;
+                        $music->path = '/m/' . $stored;
 
                         $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0],'UTF-8',$FROM_ENC) ?? '';
                         $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0],'UTF-8',$FROM_ENC) ?? '';
@@ -290,12 +290,12 @@ class MusicController extends Controller
                 Log::debug('cover: ' . print_r($cover, true));
                 if ($cover->isValid([])) {
                     Log::debug('cover: ' . print_r($cover, true));
-                    $stored = basename($cover->store('public/covers'));
+                    $stored = basename($cover->store('covers'));
                     Log::debug('stored: ' . $stored);
 
                     $path = $cover->path();
                     Log::debug('path: ' . $path);
-                    $music->cover = '/storage/covers/' . $stored;
+                    $music->cover = '/c/' . $stored;
                 }
             }
 
@@ -304,18 +304,18 @@ class MusicController extends Controller
                 Log::debug('document: ' . print_r($document, true));
                 if ($document->isValid([])) {
                     Log::debug('document: ' . print_r($document, true));
-                    $stored = basename($document->store('public/documents'));
+                    $stored = basename($document->store('documents'));
                     Log::debug('stored: ' . $stored);
 
                     $path = $document->path();
                     Log::debug('$path: ' . $path);
                     $older_document_path = $music->document;
                     Log::debug('$older_document_path: ' . $older_document_path);
-                    $music->document = '/storage/documents/' . $stored;
+                    $music->document = '/d/' . $stored;
                     Log::debug('$music->document: ' . $music->document);
 
                     if(null === $music->cover || '' === $music->cover || (strrpos($older_music_cover, '.pdf.png') === strlen($older_music_cover) - strlen('.pdf.png'))){
-                        $pdf_path = Storage::path('public').'/documents/'.$stored;
+                        $pdf_path = Storage::path('documents').'/'.$stored;
                         $pdf_path = str_replace('/', '\\', $pdf_path);
                         Log::debug('read: '.$pdf_path);
                         $shell_cmd = 'magick -density 400 "'.$pdf_path.'" "'.$pdf_path.'.png"';

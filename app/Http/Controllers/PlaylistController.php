@@ -60,12 +60,12 @@ class PlaylistController extends Controller
             Log::debug('cover: ' . print_r($cover, true));
             if ($cover->isValid([])) {
                 Log::debug('cover: ' . print_r($cover, true));
-                $stored = basename($cover->store('public/covers'));
+                $stored = basename($cover->store('covers'));
                 Log::debug('stored: ' . $stored);
 
                 $path = $cover->path();
                 Log::debug('path: ' . $path);
-                $playlist->cover = '/storage/covers/' . $stored;
+                $playlist->cover = '/c/' . $stored;
             }
         }
 
@@ -172,12 +172,12 @@ class PlaylistController extends Controller
                 Log::debug('cover: ' . print_r($cover, true));
                 if ($cover->isValid([])) {
                     Log::debug('cover: ' . print_r($cover, true));
-                    $stored = basename($cover->store('public/covers'));
+                    $stored = basename($cover->store('covers'));
                     Log::debug('stored: ' . $stored);
 
                     $path = $cover->path();
                     Log::debug('path: ' . $path);
-                    $playlist->cover = '/storage/covers/' . $stored;
+                    $playlist->cover = '/c/' . $stored;
                 }
             }
 
