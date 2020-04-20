@@ -72,14 +72,21 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
     // const japaneseYear = new Date(
     //     year,
     //     month
-    // ).toLocaleDateString("ja-JP-u-ca-japanese", {
-    //     era: "long",
-    //     year: "numeric",
+    // ).toLocaleDateString('ja-JP-u-ca-japanese', {
+    //     era: 'long',
+    //     year: 'numeric',
     // });
-    // ${year}年
     $(table)
         .children("caption")
-        .html(`${`0${month + 1}`.slice(-2)}月`);
+        .html(
+            '<a href="/music/search?created_at=' +
+                year +
+                "-" +
+                `${`0${month + 1}`.slice(-2)}` +
+                '">' +
+                `${year}年 ${`0${month + 1}`.slice(-2)}月` +
+                "</a>"
+        );
 
     calendar.forEach((week, rowIndex) => {
         const row = $("<tr>");

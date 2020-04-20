@@ -49,7 +49,7 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','random'
+            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','artist title','-artist title','random'
         ];
 
         $query = Music::query();
@@ -70,7 +70,13 @@ class MusicController extends Controller
         }
 
         if($request->has('sort_key') && ($request->sort_key)) {
-            if(
+            if('artist title' === $request->sort_key) {
+                Log::debug('sort_key: '.$request->sort_key);
+                $query->orderBy('artist', 'asc')->orderBy('title', 'asc');
+            }else if('-artist title' === $request->sort_key) {
+                Log::debug('sort_key: '.$request->sort_key);
+                $query->orderBy('artist', 'desc')->orderBy('title', 'desc');
+            }else if(
                 in_array(
                     $request->sort_key,
                     [
@@ -102,8 +108,7 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album','artist','created_at','genre','originalArtist','related_works','title','track_num','year','playtime_seconds',
-            '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-track_num','-year','-playtime_seconds'
+            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds','-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds','artist title','-artist title','random'
         ];
 
         return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request]);

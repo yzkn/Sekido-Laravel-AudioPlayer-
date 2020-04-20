@@ -6,7 +6,7 @@ $(function () {
         $("#twitter_share").attr(
             "href",
             baseurl_tweet +
-                (encodeURIComponent($("ol li.playing a.info").text()) ?? "")
+                (encodeURIComponent($("ol li.playing a .info").text()) ?? "")
         );
     }
 
