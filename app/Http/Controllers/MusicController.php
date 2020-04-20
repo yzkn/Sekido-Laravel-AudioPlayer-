@@ -14,7 +14,9 @@ class MusicController extends Controller
 {
     public function upload()
     {
-        Log::debug('music: upload');
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+
         return view('music.upload');
     }
 
