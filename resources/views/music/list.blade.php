@@ -16,19 +16,14 @@
                 <ol id="list" class="list-group my-5 col-md-12">
                     @foreach ($list_items as $key => $list_item)
                         <li class="list-group-item">
-                            <a href="{{ url('music/search').'?'.$column.'='.$list_item->$column }}">{{$list_item->$column}}</a>
-
-
                             <a role="button" href="#" onclick="event.preventDefault();document.getElementById('music-search-column-form-{{ $key }}').submit();">
-                                {{ $column }}
+                                {{$list_item->$column}}
                             </a>
                             <form id="music-search-column-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
                                 style="display: none;">
                                 @csrf
                                 <input type="hidden" name="{{ $column }}" value="{{ $list_item->$column }}">
                             </form>
-
-
                             <span class="badge badge-info badge-pill ml-1 mr-5">{{ $list_item->count }}</span>
                         </li>
                     @endforeach

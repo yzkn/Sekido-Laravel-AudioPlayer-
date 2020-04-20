@@ -75,7 +75,7 @@
                             </a>
                             <span>
                                 <!-- <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button> -->
-                                <a role="button" href="#" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
+                                <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
                                     Artist
                                 </a>
                                 <form id="music-search-artist-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
@@ -83,7 +83,7 @@
                                     @csrf
                                     <input type="hidden" name="artist" value="{{ $music->artist }}">
                                 </form>
-                                <a role="button" href="#" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
+                                <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
                                     Title
                                 </a>
                                 <form id="music-search-title-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
@@ -91,7 +91,7 @@
                                     @csrf
                                     <input type="hidden" name="title" value="{{ $music->title }}">
                                 </form>
-                                <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
+                                <a role="button" href="/music/{{ $music->id }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
                             </span>
                         </li>
                     @endforeach

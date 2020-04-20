@@ -89,7 +89,6 @@
                                     </ul>
                                 </li>
 
-
                                 <li class="nav-item"><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
                             </ul>
