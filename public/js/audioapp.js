@@ -1,24 +1,12 @@
 $(function () {
-    let baseurl_detail = "/music/";
-    let baseurl_search_artist = "/music/search?artist=";
     let baseurl_tweet = "https://twitter.com/intent/tweet?text=%23NowPlaying+";
 
     function set_info(tag) {
-        $("a#audio_detail").attr("href", baseurl_detail + tag.attr("id") ?? "");
-        $("a#audio_detail").attr("music_id", tag.attr("id") ?? "");
-        $("#audio_artist").attr(
-            "href",
-            baseurl_search_artist +
-                encodeURIComponent(tag.attr("audio_artist")) ?? ""
-        );
-        $("#audio_artist").text(tag.attr("audio_artist"));
-        $("#audio_title").text(tag.attr("audio_title"));
+        $("#audio-info").text($("ol li.playing a .info").text() ?? "");
         $("#twitter_share").attr(
             "href",
             baseurl_tweet +
-                encodeURIComponent(
-                    tag.attr("audio_artist") + " / " + tag.attr("audio_title")
-                ) ?? ""
+                (encodeURIComponent($("ol li.playing a.info").text()) ?? "")
         );
     }
 

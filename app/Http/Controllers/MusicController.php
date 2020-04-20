@@ -25,6 +25,10 @@ class MusicController extends Controller
      */
     public function index(Request $request)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+
         $user = Auth::user();
         $token = auth('api')->login($user);
         Log::debug('token: ' . $token);
@@ -52,23 +56,23 @@ class MusicController extends Controller
         $query->where('user_id', Auth::user()->id);
         // 'playtime_seconds_min', 'playtime_seconds_max'は別途
         foreach ($request->only(['album','artist','cover','document','created_at','genre','originalArtist','related_works','title','year','track_num']) as $key => $value) {
-            if(($request->get($key))){
+            if(($request->all($key))){
                 $query->where($key, 'like', '%'.$value.'%');
             }
         }
 
-        if($request->has('playtime_seconds_min') && ($request->get('playtime_seconds_min'))) {
-            Log::debug('playtime_seconds_min: '.$request->get('playtime_seconds_min'));
-            $query->where('playtime_seconds', '>=', $request->get('playtime_seconds_min'));
+        if($request->has('playtime_seconds_min') && ($request->playtime_seconds_min)) {
+            Log::debug('playtime_seconds_min: '.$request->playtime_seconds_min);
+            $query->where('playtime_seconds', '>=', $request->playtime_seconds_min);
         }
-        if($request->has('playtime_seconds_max') && ($request->get('playtime_seconds_min'))) {
-            $query->where('playtime_seconds', '<=', $request->get('playtime_seconds_max'));
+        if($request->has('playtime_seconds_max') && ($request->playtime_seconds_min)) {
+            $query->where('playtime_seconds', '<=', $request->playtime_seconds_max);
         }
 
-        if($request->has('sort_key') && ($request->get('sort_key'))) {
+        if($request->has('sort_key') && ($request->sort_key)) {
             if(
                 in_array(
-                    $request->get('sort_key'),
+                    $request->sort_key,
                     [
                         'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds',
                         '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
@@ -77,7 +81,7 @@ class MusicController extends Controller
             ) {
                 Log::debug('sort_key: '.$request->sort_key);
                 $query->orderBy($request->sort_key, (strpos($request->sort_key, '-') === 0 ) ? 'desc' : 'asc');
-            }else if ('random' === $request->get('sort_key')){
+            }else if ('random' === $request->sort_key){
                 Log::debug('sort_key: '.$request->sort_key);
                 $query->inRandomOrder(strtotime('today'));
             }
@@ -94,14 +98,36 @@ class MusicController extends Controller
     {
         Log::debug(get_class($this).' '.__FUNCTION__.'()');
         Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album','artist','created_at','genre','originalArtist','related_works','title','year','track_num','playtime_seconds',
-            '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-year','-track_num','-playtime_seconds'
+            'album','artist','created_at','genre','originalArtist','related_works','title','track_num','year','playtime_seconds',
+            '-album','-artist','-created_at','-genre','-originalArtist','-related_works','-title','-track_num','-year','-playtime_seconds'
         ];
 
         return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request]);
+    }
+
+    public function list(Request $request)
+    {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+
+        $column = 'artist';
+        if(in_array(
+            $request->column,
+            [
+                'album','artist','genre','originalArtist','related_works','title','track_num','year'
+            ]
+        )){
+            $column = $request->column;
+        }
+
+        $musics = Music::where('user_id', Auth::user()->id)->selectRaw($column.', count(*) AS count')->groupBy($column)->having($column, '<>', '')->get();
+        Log::debug('musics: ' . $musics);
+        return view('music.list', ['column' => $column , 'list_items' => $musics]);
     }
 
     /**
@@ -111,6 +137,9 @@ class MusicController extends Controller
      */
     public function create()
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+
         return redirect('music');
     }
 
@@ -122,6 +151,10 @@ class MusicController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+
         $FROM_ENC = 'ASCII,JIS,UTF-8,EUC-JP,SJIS';
 
         $validatedData = $request->validate([
@@ -193,6 +226,10 @@ class MusicController extends Controller
      */
     public function show($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         return view('music.show', ['music' => $music]);
     }
@@ -205,6 +242,10 @@ class MusicController extends Controller
      */
     public function edit($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $genre_list = \getid3_id3v1::ArrayOfGenres();
 
         $playlists = Playlist::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
@@ -228,6 +269,11 @@ class MusicController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+        Log::debug('$id: '.$id);
+
         $validatedData = $request->validate([
             // 'title' => 'required|unique:musics|max:255',
             'cover' => 'mimes:jpeg,png|dimensions:min_width=1,min_height=1,max_width=500,max_height=500',
@@ -345,6 +391,10 @@ class MusicController extends Controller
      */
     public function destroy($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $music = Music::where('user_id', Auth::user()->id)->where('id', $id)->first();
         $music->delete();
         return redirect('music');

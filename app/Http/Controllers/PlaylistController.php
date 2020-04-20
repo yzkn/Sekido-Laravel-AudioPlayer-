@@ -17,6 +17,9 @@ class PlaylistController extends Controller
      */
     public function index()
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+
         $playlists = Playlist::where('user_id', Auth::user()->id)->get();
         Log::debug('playlists: ' . $playlists);
         return view('playlist.index', ['playlists' => $playlists]);
@@ -29,6 +32,9 @@ class PlaylistController extends Controller
      */
     public function create()
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+
         $musics = Music::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('musics: ' . $musics);
 
@@ -43,6 +49,10 @@ class PlaylistController extends Controller
      */
     public function store(Request $request)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+
         $playlist = new Playlist;
 
         if ($request->hasFile('cover')) {
@@ -107,6 +117,10 @@ class PlaylistController extends Controller
      */
     public function show($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $playlist = Playlist::where('id', $id)->first();
         return view('playlist.show', ['playlist' => $playlist]);
     }
@@ -119,6 +133,10 @@ class PlaylistController extends Controller
      */
     public function edit($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $musics = Music::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
         Log::debug('musics: ' . $musics);
 
@@ -141,6 +159,11 @@ class PlaylistController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$request: '.$request);
+        Log::debug('$id: '.$id);
+
         $playlist = Playlist::where('id', $id)->first();
         if($playlist){
 
@@ -212,6 +235,10 @@ class PlaylistController extends Controller
      */
     public function destroy($id)
     {
+        Log::debug(get_class($this).' '.__FUNCTION__.'()');
+        Log::debug('User: '.Auth::user());
+        Log::debug('$id: '.$id);
+
         $playlist = Playlist::where('id', $id)->first();
         $playlist->delete();
         return redirect('playlist');

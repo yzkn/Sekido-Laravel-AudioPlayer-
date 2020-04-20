@@ -47,29 +47,50 @@
             <div class="col-md-12">
                 <div class="jumbotron my-5">
                     <h1 class="display-4 my-3">Player</h1>
+                    <hr class="my-4">
                     <div class="row mt-3 justify-content-center">
                         <audio autoplay preload="auto"></audio>
                     </div>
                     <div class="row mt-1 col-sm-9 offset-sm-3">
-                        <a id="audio_artist" href="#" target="_blank">***</a> &nbsp; / &nbsp;
-                        <a id="audio_detail" href="#" target="_blank"><span id="audio_title" href="#" target="_blank">***</span></a>
+                        <div>
+                            <p id="audio-info"></p>
+                        </div>
+                        <a id="twitter_share" href="#" target="_blank">
+                            <img class="icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
+                        </a>
                     </div>
                 </div>
 
                 <ol id="playlist" class="list-group my-5 col-md-12">
-                    @foreach ($playlist->musics as $music)
+                    @foreach ($playlist->musics as $key => $music)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="#"
                                 class="musicitem"
                                 data-src="{{ $music->path }}"
-                                id="{{ $music->id }}"
-                                audio_artist="{{ $music->artist }}"
-                                audio_title="{{ $music->title }}" >
+                                id="{{ $music->id }}">
                                 <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
-                                    {{$music->artist}} / {{$music->title}}
+                                <span class="info">
+                                    <span class="artist">{{$music->artist}}</span> / <span class="title">{{$music->title}}</span>
+                                </span>
                             </a>
                             <span>
                                 <!-- <button type="button" class="queue btn btn-sm btn-outline-warning">Add to queue</button> -->
+                                <a role="button" href="#" onclick="event.preventDefault();document.getElementById('music-search-artist-form-{{ $key }}').submit();">
+                                    Artist
+                                </a>
+                                <form id="music-search-artist-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="artist" value="{{ $music->artist }}">
+                                </form>
+                                <a role="button" href="#" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
+                                    Title
+                                </a>
+                                <form id="music-search-title-form-{{ $key }}" action="{{ url('music/search') }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="title" value="{{ $music->title }}">
+                                </form>
                                 <a role="button" href="/music/{{ $music->id }}" class="detail btn btn-sm btn-outline-info" target="_blank">Detail</a>
                             </span>
                         </li>

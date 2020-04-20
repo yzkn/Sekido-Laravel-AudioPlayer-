@@ -32,6 +32,9 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     Route::get('/music/search', 'MusicController@searchform')->name('music.searchform');
     Route::post('/music/search', 'MusicController@search')->name('music.search');
 
+    // グループ化リスト
+    Route::get('/music/list', 'MusicController@list')->name('music.list');
+
     // ファイルアップロード
     Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
 

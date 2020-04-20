@@ -58,9 +58,40 @@
                                 {{ __('Music') }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ url('music') }}">{{ __('List') }}</a></li>
-                                <li><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
-                                <li><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('music') }}">{{ __('All musics') }}</a></li>
+                                <li class="nav-item dropdown_music_list">
+                                    <a class="nav-link" href="#">{{ __('List') }}</a>
+                                    <ul class="nav flex-column dropdown_music_list_sub">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=album">{{ __('album') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=artist">{{ __('artist') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=genre">{{ __('genre') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=originalArtist">{{ __('originalArtist') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=related_works">{{ __('related_works') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=title">{{ __('title') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=track_num">{{ __('track_num') }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('music/list') }}?column=year">{{ __('year') }}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="nav-item"><a class="nav-link" href="{{ url('music/search') }}">{{ __('Search') }}</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ url('music/upload') }}">{{ __('Upload') }}</a></li>
                             </ul>
                         </li>
 
