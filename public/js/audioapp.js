@@ -2,11 +2,17 @@ $(function () {
     let baseurl_tweet = "https://twitter.com/intent/tweet?text=%23NowPlaying+";
 
     function set_info(tag) {
-        $("#audio-info").text($("ol li.playing a .info").text() ?? "");
+        $("#audio-info").text(
+            $("ol li.playing a .info").text()
+                ? $("ol li.playing a .info").text()
+                : ""
+        );
         $("#twitter_share").attr(
             "href",
             baseurl_tweet +
-                (encodeURIComponent($("ol li.playing a .info").text()) ?? "")
+                ($("ol li.playing a .info").text()
+                    ? encodeURIComponent($("ol li.playing a .info").text())
+                    : "")
         );
     }
 

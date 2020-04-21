@@ -1,6 +1,6 @@
 bubbly({
     blur: 15,
-    colorStart: "#DAEFFE",
+    colorStart: "#BACFFE",
     colorStop: "#FFFEFF",
     radiusFunc: () => 5 + Math.random() * 5,
     angleFunc: () => -Math.PI / 2,
