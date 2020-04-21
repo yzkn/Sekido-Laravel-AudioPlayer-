@@ -4,8 +4,11 @@ namespace App\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
+use App\Music;
+use App\User;
 
 class ReceiveEmails extends Command
 {
@@ -40,7 +43,7 @@ class ReceiveEmails extends Command
      */
     public function handle()
     {
-        Log::debug('handle');
+        dump('handle');
 
         dump('handle');
 
@@ -52,11 +55,78 @@ class ReceiveEmails extends Command
         // dump('$imap_port: ' . $imap_port);
         // dump('$imap_user: ' . $imap_user);
         // dump('$imap_pass: ' . $imap_pass);
+        $imap_senders = explode(',', config('imap.sender'));
 
-        $this->imap_receive_emails($imap_server, $imap_port, $imap_user, $imap_pass);
+        $this->imap_receive_emails($imap_server, $imap_port, $imap_user, $imap_pass, $imap_senders);
     }
 
-    private function imap_receive_emails($imap_server, $imap_port, $imap_user, $imap_pass)
+    private function create_music($data)
+    {
+        dump('create_music(): ' . print_r($data, true));
+        dump('subject: ' . $data['subject']);
+        dump('sender: ' . $data['sender']);
+        dump('message: ' . $data['message']);
+        dump('music: ' . $data['music']);
+        dump('document: ' . $data['document']);
+
+        $path = [];
+
+        if ($data['music']) {
+            $path['music'] = str_replace('/', '\\', Storage::path('musics') . '/' . $data['music']);
+
+            $getID3 = new \getID3();
+            $tag = $getID3->analyze($path['music']);
+
+            $music = new Music;
+
+            $music->path = '/m/' . $data['music'];
+
+            $FROM_ENC = 'ASCII,JIS,UTF-8,EUC-JP,SJIS';
+            $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0], 'UTF-8', $FROM_ENC) ?? '';
+            $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0], 'UTF-8', $FROM_ENC) ?? '';
+            $music->bitrate = $tag['bitrate'] ?? '';
+            $music->cover = '';
+            $music->document = '';
+            $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0], 'UTF-8', $FROM_ENC) ?? '';
+            $music->originalArtist = '';
+            $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
+            $music->related_works = ($data['subject'] ?? '') . ' / ' . ($data['message'] ?? '');
+            $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0], 'UTF-8', $FROM_ENC) ?? '';
+            $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
+            $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
+
+            $user = User::where('email', $data['sender'])->first();
+            if ($user) {
+                // dump('$user: ' . print_r($user, true));
+                $music->user_id = $user->id;
+            } else {
+                $music->user_id = 1;
+            }
+            dump('$music->user_id: ' . print_r($music->user_id, true));
+
+            if ($data['document']) {
+                dump('$data[\'document\']: ' . print_r($data['document'], true));
+                $music->document = '/d/' . $data['document'];
+
+                $path['document'] = str_replace('/', '\\', Storage::path('documents') . '/' . $data['document']);
+                dump('$path[\'document\']: ' . print_r($path['document'], true));
+                $pdf_path = $path['document'];
+                dump('read: ' . $pdf_path);
+                $shell_cmd = 'magick -density 400 "' . $pdf_path . '" "' . $pdf_path . '.png"';
+                dump('shell_cmd: ' . $shell_cmd);
+                $output = shell_exec($shell_cmd);
+                dump('output: ' . print_r($output, true));
+
+                if (file_exists($pdf_path . '.png')) {
+                    $music->cover = $music->document . '.png';
+                }
+            }
+
+            $music->save();
+        }
+    }
+
+    private function imap_receive_emails($imap_server, $imap_port, $imap_user, $imap_pass, $imap_senders)
     {
         $limit = 1;
 
@@ -72,10 +142,17 @@ class ReceiveEmails extends Command
                 $msgno = $info->Nmsgs - $i;
                 if ($msgno <= 0) break;
 
-                $header = imap_header($mbox, $msgno);
-                $subject = $this->getSubject($header);
-                dump($msgno . ':' . $subject);
-                $this->getBody($mbox, $msgno);
+                $headerinfo = imap_headerinfo($mbox, $msgno);
+                dump('imap_headerinfo ' . print_r($headerinfo, true));
+
+                if (0 === count($imap_senders) || in_array($headerinfo->fromaddress, $imap_senders)) {
+                    $subject = $this->getSubject($headerinfo);
+                    dump($msgno . ':' . $subject);
+                    $message_data = $this->getBody($mbox, $msgno);
+                    $message_data['subject'] = $subject;
+                    $message_data['sender'] = $headerinfo->fromaddress;
+                    $this->create_music($message_data);
+                }
             }
             imap_close($mbox);
             dump('imap_close');
@@ -106,10 +183,11 @@ class ReceiveEmails extends Command
     {
         dump('getBody($mbox, $msgno): ' . print_r($mbox, true), print_r($msgno, true));
 
+        $return_data = [];
+
         $charset = null;
         $encoding = null;
         $attached_data = null;
-        $parameters = null;
 
         $info = imap_fetchstructure($mbox, $msgno);
         dump('$info');
@@ -127,14 +205,13 @@ class ReceiveEmails extends Command
                         $encoding = $info->parts[$p]->encoding;
                     }
                 } elseif (!empty($info->parts[$p]->parts) && $info->parts[$p]->parts[$p]->type == 0) {
-                    $parameters = $info->parts[$p]->parameters[0]->value;
                     if (empty($charset)) {
                         $charset = $info->parts[$p]->parts[$p]->parameters[0]->value;
                     }
                     if (empty($encoding)) {
                         $encoding = $info->parts[$p]->parts[$p]->encoding;
                     }
-                } elseif ($info->parts[$p]->type == 3 || $info->parts[$p]->type == 4 || $info->parts[$p]->type == 5) {
+                } elseif ($info->parts[$p]->type == 3 || $info->parts[$p]->type == 4) {
                     $files = imap_mime_header_decode($info->parts[$p]->parameters[0]->value);
                     if (!empty($files) && is_array($files)) {
                         $attached_data[$p]['file_name'] = null;
@@ -158,8 +235,7 @@ class ReceiveEmails extends Command
             dump('empty($charset)');
         }
 
-        $body = imap_fetchbody($mbox, $msgno, 1, FT_INTERNAL);
-        $body = trim($body);
+        $body = trim(imap_fetchbody($mbox, $msgno, 1, FT_INTERNAL));
         dump('trim($body)');
 
         if (!empty($body)) {
@@ -167,20 +243,20 @@ class ReceiveEmails extends Command
 
             switch ($encoding) {
                 case 0:
-                    $mail[$msgno]['body'] = mb_convert_encoding($body, "UTF-8", $charset);
+                    $mail_body = mb_convert_encoding($body, "UTF-8", $charset);
                     break;
                 case 1:
                     $encode_body = imap_8bit($body);
                     $encode_body = imap_qprint($encode_body);
-                    $mail[$msgno]['body'] = mb_convert_encoding($encode_body, "UTF-8", $charset);
+                    $mail_body = mb_convert_encoding($encode_body, "UTF-8", $charset);
                     break;
                 case 3:
                     $encode_body = imap_base64($body);
-                    $mail[$msgno]['body'] = mb_convert_encoding($encode_body, "UTF-8", $charset);
+                    $mail_body = mb_convert_encoding($encode_body, "UTF-8", $charset);
                     break;
                 case 4:
                     $encode_body = imap_qprint($body);
-                    $mail[$msgno]['body'] = mb_convert_encoding($encode_body, 'UTF-8', $charset);
+                    $mail_body = mb_convert_encoding($encode_body, 'UTF-8', $charset);
                     break;
                 case 2:
                 case 5:
@@ -188,6 +264,9 @@ class ReceiveEmails extends Command
                     dump('$encoding: ' . $encoding);
                     break;
             }
+
+            dump('$mail_body');
+            $return_data['message'] = $mail_body;
         } else {
             dump('empty($body)');
         }
@@ -199,22 +278,28 @@ class ReceiveEmails extends Command
                 if (empty($attached)) break;
 
                 list($name, $ex) = explode('.', $value['file_name']);
-                $mail[$msgno]['attached_file'][$key]['file_name'] = $name . '_' . time() . '_' . $key . '.' . $ex;
-                $mail[$msgno]['attached_file'][$key]['content_body'] = imap_base64($attached);
-                $mail[$msgno]['attached_file'][$key]['content_type'] = strtolower($value['content_type']);
+                $file_name = md5($name . '_' . time() . '_' . $key . '.' . $ex) . '.' . $ex;
+                $content_body = imap_base64($attached);
+                $content_type = strtolower($value['content_type']);
 
-                dump('$mail: ' . print_r($mail[$msgno]['attached_file'][$key]['content_type'], true));
+                $parent = 'temp';
+                if ('pdf' === $content_type) {
+                    $parent = 'documents';
+                    $return_data['document'] = $file_name;
+                } else if ('mpeg' === $content_type) {
+                    $parent = 'musics';
+                    $return_data['music'] = $file_name;
+                }
 
-                $body = $mail[$msgno]['attached_file'][$key]['content_body'];
-                $saveFilename = $mail[$msgno]['attached_file'][$key]['file_name'];
-                $savePath = $this->saveDir . $saveFilename;
+                $savePath = str_replace('/', '\\', Storage::path($parent) . '/' . $file_name);
                 if ($fp = fopen($savePath, "w")) {
-                    $length = strlen($body);
-                    fwrite($fp, $body, $length);
+                    fwrite($fp, $content_body, strlen($content_body));
                     fclose($fp);
-                    dump('Saved: ' . $saveFilename);
+                    dump('Saved: ' . $file_name);
                 }
             }
         }
+
+        return $return_data;
     }
 }
