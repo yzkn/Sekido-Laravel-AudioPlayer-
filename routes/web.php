@@ -17,6 +17,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// システム管理者のみ
+Route::group(['middleware' => ['auth', 'can:system-only']], function () {
+});
+
+// 管理者以上
+Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
+  // ファイルアップロード
+  Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
+});
+
 // 全員
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
     // 検索
@@ -36,15 +46,4 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
     Route::get('/c/{path}', 'FileController@covers');
     Route::get('/d/{path}', 'FileController@documents');
     Route::get('/m/{path}', 'FileController@musics');
-});
-
-  // 管理者以上
-Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
-    // ファイルアップロード
-    Route::get('/music/upload', 'MusicController@upload')->name('music.upload');
-});
-
-  // システム管理者のみ
-Route::group(['middleware' => ['auth', 'can:system-only']], function () {
-
 });
