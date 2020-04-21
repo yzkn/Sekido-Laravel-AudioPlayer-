@@ -63,15 +63,10 @@ class ReceiveEmails extends Command
     private function create_music($data)
     {
         dump('create_music(): ' . print_r($data, true));
-        dump('subject: ' . $data['subject']);
-        dump('sender: ' . $data['sender']);
-        dump('message: ' . $data['message']);
-        dump('music: ' . $data['music']);
-        dump('document: ' . $data['document']);
 
         $path = [];
 
-        if ($data['music']) {
+        if (isset($data['music']) && $data['music']) {
             $path['music'] = str_replace('/', '\\', Storage::path('musics') . '/' . $data['music']);
 
             $getID3 = new \getID3();
@@ -104,7 +99,7 @@ class ReceiveEmails extends Command
             }
             dump('$music->user_id: ' . print_r($music->user_id, true));
 
-            if ($data['document']) {
+            if (isset($data['document']) && $data['document']) {
                 dump('$data[\'document\']: ' . print_r($data['document'], true));
                 $music->document = '/d/' . $data['document'];
 
@@ -134,14 +129,11 @@ class ReceiveEmails extends Command
             dump('Failed to connect to ' . $imap_server);
         } else {
             dump('connected to ' . $imap_server);
-            $headers = imap_headers($mbox);
-            dump('$headers ' . print_r($headers, true));
-            $info = imap_check($mbox);
-            dump('$info ' . print_r($info, true));
-            for ($i = 0; $i < $limit; $i++) {
-                $msgno = $info->Nmsgs - $i;
-                if ($msgno <= 0) break;
 
+            dump('mbox: ' . print_r($mbox, true));
+            $message_ids = imap_search($mbox, 'UNSEEN');
+            dump('message_ids: ' . print_r($message_ids, true));
+            foreach ($message_ids as $msgno) {
                 $headerinfo = imap_headerinfo($mbox, $msgno);
                 dump('imap_headerinfo ' . print_r($headerinfo, true));
 
@@ -154,6 +146,7 @@ class ReceiveEmails extends Command
                     $this->create_music($message_data);
                 }
             }
+
             imap_close($mbox);
             dump('imap_close');
         }
@@ -175,9 +168,6 @@ class ReceiveEmails extends Command
         }
         return $subject;
     }
-
-    // protected $extensionList = array('mp3', 'pdf', 'png');
-    protected $saveDir = './';
 
     private function getBody($mbox, $msgno)
     {
