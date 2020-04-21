@@ -75,7 +75,7 @@
                     <a href="#" class="musicitem" data-src="{{ $music->path }}" id="{{ $music->id }}">
                         <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
                         <span class="info">
-                            <span class="artist">{{$music->artist}}</span> / <span class="title">{{$music->title}}</span>
+                            <span class="artist">{{$music->artist}}</span> / {{$music->album}}</span> / <span class="title">{{$music->title}}</span>
                         </span>
                     </a>
                     <span>
@@ -90,9 +90,16 @@
                         <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-title-form-{{ $key }}').submit();">
                             Title
                         </a>
-                        <form id="music-search-title-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                        <form id="music-search-album-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
                             @csrf
-                            <input type="hidden" name="title" value="{{ $music->title }}">
+                            <input type="hidden" name="album" value="{{ $music->album }}">
+                        </form>
+                        <a role="button" href="#" class="btn btn-sm btn-outline-dark" onclick="event.preventDefault();document.getElementById('music-search-album-form-{{ $key }}').submit();">
+                            Album
+                        </a>
+                        <form id="music-search-album-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
+                            @csrf
+                            <input type="hidden" name="album" value="{{ $music->album }}">
                         </form>
                         <a role="button" href="/music/{{ $music->id }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
                     </span>

@@ -51,7 +51,7 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album', 'artist', 'created_at', 'genre', 'originalArtist', 'related_works', 'title', 'year', 'track_num', 'playtime_seconds', '-album', '-artist', '-created_at', '-genre', '-originalArtist', '-related_works', '-title', '-year', '-track_num', '-playtime_seconds', 'artist title', '-artist title', 'random'
+            'album', 'artist', 'created_at', 'genre', 'originalArtist', 'related_works', 'title', 'year', 'track_num', 'playtime_seconds', '-album', '-artist', '-created_at', '-genre', '-originalArtist', '-related_works', '-title', '-year', '-track_num', '-playtime_seconds', 'artist title', '-artist title', 'artist album title', '-artist album title', 'artist album track_num', '-artist album track_num', 'random'
         ];
 
         $query = Music::query();
@@ -72,7 +72,19 @@ class MusicController extends Controller
         }
 
         if ($request->has('sort_key') && ($request->sort_key)) {
-            if ('artist title' === $request->sort_key) {
+            if ('artist album title' === $request->sort_key) {
+                Log::debug('sort_key: ' . $request->sort_key);
+                $query->orderBy('artist', 'asc')->orderBy('album', 'asc')->orderBy('title', 'asc');
+            } else if ('-artist album title' === $request->sort_key) {
+                Log::debug('sort_key: ' . $request->sort_key);
+                $query->orderBy('artist', 'desc')->orderBy('album', 'desc')->orderBy('title', 'desc');
+            } else if ('artist album track_num' === $request->sort_key) {
+                Log::debug('sort_key: ' . $request->sort_key);
+                $query->orderBy('artist', 'asc')->orderBy('album', 'asc')->orderBy('track_num', 'asc');
+            } else if ('-artist album track_num' === $request->sort_key) {
+                Log::debug('sort_key: ' . $request->sort_key);
+                $query->orderBy('artist', 'desc')->orderBy('album', 'desc')->orderBy('track_num', 'desc');
+            } else if ('artist title' === $request->sort_key) {
                 Log::debug('sort_key: ' . $request->sort_key);
                 $query->orderBy('artist', 'asc')->orderBy('title', 'asc');
             } else if ('-artist title' === $request->sort_key) {
@@ -110,7 +122,7 @@ class MusicController extends Controller
 
         $genre_list = \getid3_id3v1::ArrayOfGenres();
         $sort_list = [
-            'album', 'artist', 'created_at', 'genre', 'originalArtist', 'related_works', 'title', 'year', 'track_num', 'playtime_seconds', '-album', '-artist', '-created_at', '-genre', '-originalArtist', '-related_works', '-title', '-year', '-track_num', '-playtime_seconds', 'artist title', '-artist title', 'random'
+            'album', 'artist', 'created_at', 'genre', 'originalArtist', 'related_works', 'title', 'year', 'track_num', 'playtime_seconds', '-album', '-artist', '-created_at', '-genre', '-originalArtist', '-related_works', '-title', '-year', '-track_num', '-playtime_seconds', 'artist title', '-artist title', 'artist album title', '-artist album title', 'random'
         ];
 
         return view('music.index', ['musics' => array(), 'genre_list' => $genre_list, 'sort_list' => $sort_list, 'request' => $request]);
