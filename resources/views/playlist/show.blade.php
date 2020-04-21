@@ -75,7 +75,7 @@
                     <a href="#" class="musicitem" data-src="{{ $music->path }}" id="{{ $music->id }}">
                         <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
                         <span class="info">
-                            <span class="artist">{{$music->artist}}</span> / {{$music->album}}</span> / <span class="title">{{$music->title}}</span>
+                            <span class="artist">{{$music->artist}}</span> / <span class="album">{{$music->album}}</span> / <span class="title">{{$music->title}}</span>
                         </span>
                     </a>
                     <span>
