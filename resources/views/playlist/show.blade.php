@@ -49,22 +49,26 @@
                 <h1 class="display-4 my-3">Player</h1>
                 <hr class="my-4">
                 <div class="row mt-3 justify-content-center">
-                    @isset ($musics)
-                    @if (count($musics)>0)
+                    @isset ($playlist)
+                    @isset ($playlist->musics)
+                    @if (count($playlist->musics)>0)
                     <audio autoplay preload="auto"></audio>
                     @endif
+                    @endisset
                     @endisset
                 </div>
                 <div class="row mt-1 col-sm-9 offset-sm-3">
                     <div>
                         <p id="audio-info"></p>
                     </div>
-                    @isset ($musics)
-                    @if (count($musics)>0)
+                    @isset ($playlist)
+                    @isset ($playlist->musics)
+                    @if (count($playlist->musics)>0)
                     <a id="twitter_share" href="#" target="_blank">
                         <img class="icon mx-2" src="{{ asset('icon/Twitter_Logo_Blue.png') }}" alt="">
                     </a>
                     @endif
+                    @endisset
                     @endisset
                 </div>
             </div>
