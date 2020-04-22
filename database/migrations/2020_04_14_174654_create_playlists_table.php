@@ -21,7 +21,7 @@ class CreatePlaylistsTable extends Migration
             $table->string('description')->nullable();
             $table->string('title')->nullable();
 
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // 外部キー制約
         });

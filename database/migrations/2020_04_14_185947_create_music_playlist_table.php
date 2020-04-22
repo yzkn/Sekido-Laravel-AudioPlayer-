@@ -17,8 +17,8 @@ class CreateMusicPlaylistTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->integer('music_id');
-            $table->integer('playlist_id');
+            $table->unsignedBigInteger('music_id');
+            $table->unsignedBigInteger('playlist_id');
 
             $table->unique(['music_id', 'playlist_id']);
             $table->foreign('music_id')
