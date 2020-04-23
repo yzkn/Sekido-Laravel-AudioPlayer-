@@ -28,12 +28,6 @@ $ touch database/database.sqlite
 $ php artisan migrate
 ```
 
-## シンボリックリンク生成
-
-```cmd
-$ php artisan storage:link
-```
-
 ## 動作確認
 
 ```ps
@@ -49,3 +43,29 @@ $ php artisan serve
 ### システム管理者権限付与
 
 システム管理者にしたいユーザーの `role` に `1` を設定
+
+## Apache2でサブディレクトリに設置する場合
+
+* `public/.htaccess`
+
+```
+#RewriteRule ^ %1 [L,R=301]
+RewriteRule ^(.*)/$ /<SUBDIR>/$1 [L,R=301]
+RewriteBase /<SUBDIR>/
+```
+
+* audio.js
+
+```js
+"player-graphics.gif"
+// 追記
+"audio/js/player-graphics.gif"
+```
+
+php.iniの以下の設定値も併せて確認
+
+* file_uploads
+* max_file_uploads
+* upload_max_filesize
+* memory_limit
+* post_max_size
