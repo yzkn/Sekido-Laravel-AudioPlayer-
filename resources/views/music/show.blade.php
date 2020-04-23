@@ -11,7 +11,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-12 row justify-content-center my-5">
-                                <audio preload="auto" controlls src="{{ isset($music) ? ($music->path ?? '') : '' }}"></audio>
+                                <audio preload="auto" controlls src="{{ isset($music) ? ((route('home').$music->path) ?? '') : '' }}"></audio>
                             </div>
                             <div class="col-sm-4 my-2">{{ __('Title') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->title ?? '' }}</div>
@@ -51,7 +51,7 @@
                                 @isset($music)
                                     @isset($music->cover)
                                         @if('' !== $music->cover)
-                                            <img src="{{ $music->cover }}" alt="" class="img-thumbnail">
+                                            <img src="{{route('home')}}{{ $music->cover }}" alt="" class="img-thumbnail">
                                         @endif
                                     @endisset
                                 @endisset
@@ -61,7 +61,7 @@
                                 @isset($music)
                                     @isset($music->document)
                                         @if('' !== $music->document)
-                                            <a href="{{ $music->document }}" target="_blank">
+                                            <a href="{{route('home')}}{{ $music->document }}" target="_blank">
                                                 {{ basename($music->document) }}
                                             </a>
                                         @endif

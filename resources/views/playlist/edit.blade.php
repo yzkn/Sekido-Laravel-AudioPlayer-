@@ -25,7 +25,7 @@
                                     @isset($playlist)
                                         @isset($playlist->cover)
                                             @if('' !== $playlist->cover)
-                                                <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
+                                                <img src="{{route('home')}}{{ $playlist->cover }}" alt="" class="img-thumbnail"><br>
                                             @endif
                                         @endisset
                                     @endisset

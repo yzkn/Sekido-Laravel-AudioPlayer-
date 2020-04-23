@@ -9,8 +9,8 @@
                     <h1 class="display-4 my-3">Upload</h1>
                     <hr class="my-4">
                     <div class="col mt-4">
-                        <form method="POST" action="{{ url('music/') }}" enctype="multipart/form-data" onSubmit="$('#submit').attr('disabled', true)">
-                            {{ csrf_field() }}
+                        <form method="POST" action="{{ url('music') }}" enctype="multipart/form-data" onSubmit="$('#submit').attr('disabled', true)">
+                            @csrf
                             <div class="input-group" title="音楽ファイルと一緒に画像ファイルを1つ指定することでカバーアートとして登録できます。">
                                 <label class="input-group-btn">
                                     <span class="btn btn-outline-primary">

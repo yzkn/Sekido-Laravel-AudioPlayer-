@@ -166,7 +166,7 @@
                 @if ('/music/search' === explode('?', str_replace(url('/'),"",\Request::fullUrl()))[0] )
                 <div class="p-4 mb-3">
                     <form method="POST" action="{{ url('music/search') }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                        @csrf
                         <div class="row">
                             <div class="col-sm-4 my-2">{{ __('Title') }}</div>
                             <div class="col-sm-8 my-2">
@@ -240,7 +240,7 @@
                         @foreach (App\Music::select('cover')->where('user_id', Auth::user()->id)->groupBy('cover')->having('cover', '<>', '')->inRandomOrder()->get() as $key => $music)
                             <div class="cover-cloud-item" style="display:inline;">
                                 <a href="#" onclick="event.preventDefault();document.getElementById('music-search-cover-form-{{ $key }}').submit();">
-                                    <img src="{{ $music->cover }}" class="img-thumbnail cover-cloud-item-thumbnail">
+                                    <img src="{{route('home')}}{{ $music->cover }}" class="img-thumbnail cover-cloud-item-thumbnail">
                                 </a>
                                 <form id="music-search-cover-form-{{ $key }}" action="{{ url('music/search') }}" method="POST" style="display: none;">
                                     @csrf

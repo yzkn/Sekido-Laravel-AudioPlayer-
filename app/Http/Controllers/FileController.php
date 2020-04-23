@@ -17,7 +17,7 @@ class FileController extends Controller
         Log::debug('User: '.Auth::user());
         Log::debug('$path: '.$path);
 
-        $path = str_replace('/', '\\', Storage::path('covers').'/'.basename($path));
+        $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('covers').'/'.basename($path));
         Log::debug('$path: '.$path);
 
         if(file_exists($path) && $img_type = exif_imagetype($path)){
@@ -37,7 +37,7 @@ class FileController extends Controller
         Log::debug('User: '.Auth::user());
         Log::debug('$path: '.$path);
 
-        $path = str_replace('/', '\\', Storage::path('documents').'/'.basename($path));
+        $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('documents').'/'.basename($path));
         Log::debug('$path: '.$path);
 
         $magic = file_get_contents($path, false, null, 0, 12);
@@ -65,7 +65,7 @@ class FileController extends Controller
         Log::debug('User: '.Auth::user());
         Log::debug('$path: '.$path);
 
-        $path = str_replace('/', '\\', Storage::path('musics').'/'.basename($path));
+        $path = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('musics').'/'.basename($path));
         Log::debug('$path: '.$path);
 
         $getID3 = new \getID3();

@@ -333,7 +333,7 @@ class MusicController extends Controller
 
                     if (null === $music->cover || '' === $music->cover || (strrpos($older_music_cover, '.pdf.png') === strlen($older_music_cover) - strlen('.pdf.png'))) {
                         $pdf_path = Storage::path('documents') . '/' . $stored;
-                        $pdf_path = str_replace('/', '\\', $pdf_path);
+                        $pdf_path = str_replace('/', DIRECTORY_SEPARATOR, $pdf_path);
                         Log::debug('read: ' . $pdf_path);
                         $shell_cmd = 'magick -density 400 "' . $pdf_path . '" "' . $pdf_path . '.png"';
                         Log::debug('shell_cmd: ' . $shell_cmd);

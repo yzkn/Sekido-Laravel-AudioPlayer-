@@ -21,7 +21,7 @@
                                 @isset($playlist)
                                 @isset($playlist->cover)
                                 @if('' !== $playlist->cover)
-                                <img src="{{ $playlist->cover }}" alt="" class="img-thumbnail">
+                                <img src="{{route('home')}}{{ $playlist->cover }}" alt="" class="img-thumbnail">
                                 @endif
                                 @endisset
                                 @endisset
@@ -76,8 +76,8 @@
             <ol id="playlist" class="list-group my-5 col-md-12">
                 @foreach ($playlist->musics as $key => $music)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="#" class="musicitem" data-src="{{ $music->path }}" id="{{ $music->id }}">
-                        <img src="{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
+                    <a href="#" class="musicitem" data-src="{{ (route('home').$music->path) }}" id="{{ $music->id }}">
+                        <img src="{{route('home')}}{{ $music->cover }}" class="img-thumbnail music-item-thumbnail" style="{{ $music->cover ? '' : 'visibility:hidden'}}">
                         <span class="info">
                             <span class="artist">{{$music->artist}}</span> / <span class="album">{{$music->album}}</span> / <span class="title">{{$music->title}}</span>
                         </span>

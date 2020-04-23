@@ -67,7 +67,7 @@ class ReceiveEmails extends Command
         $path = [];
 
         if (isset($data['music']) && $data['music']) {
-            $path['music'] = str_replace('/', '\\', Storage::path('musics') . '/' . $data['music']);
+            $path['music'] = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('musics') . '/' . $data['music']);
 
             $getID3 = new \getID3();
             $tag = $getID3->analyze($path['music']);
@@ -103,7 +103,7 @@ class ReceiveEmails extends Command
                 dump('$data[\'document\']: ' . print_r($data['document'], true));
                 $music->document = '/d/' . $data['document'];
 
-                $path['document'] = str_replace('/', '\\', Storage::path('documents') . '/' . $data['document']);
+                $path['document'] = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('documents') . '/' . $data['document']);
                 dump('$path[\'document\']: ' . print_r($path['document'], true));
                 $pdf_path = $path['document'];
                 dump('read: ' . $pdf_path);
@@ -281,7 +281,7 @@ class ReceiveEmails extends Command
                     $return_data['music'] = $file_name;
                 }
 
-                $savePath = str_replace('/', '\\', Storage::path($parent) . '/' . $file_name);
+                $savePath = str_replace('/', DIRECTORY_SEPARATOR, Storage::path($parent) . '/' . $file_name);
                 if ($fp = fopen($savePath, "w")) {
                     fwrite($fp, $content_body, strlen($content_body));
                     fclose($fp);
