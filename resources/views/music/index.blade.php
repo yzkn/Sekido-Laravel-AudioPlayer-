@@ -59,7 +59,7 @@
                             @csrf
                             <input type="hidden" name="title" value="{{ $music->title }}">
                         </form>
-                        <a role="button" href="/music/{{ $music->id }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
+                        <a role="button" href="{{ url('music/'.$music->id) }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
                     </span>
                 </li>
                 @endforeach

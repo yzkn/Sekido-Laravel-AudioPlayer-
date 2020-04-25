@@ -79,7 +79,7 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
     $(table)
         .children("caption")
         .html(
-            '<a href="/music/search?created_at=' +
+            '<a href="'+(location.origin).split('/music/')[0]+'/music/search?created_at=' +
                 year +
                 "-" +
                 `${`0${month + 1}`.slice(-2)}` +
@@ -92,7 +92,7 @@ function drawMonthCalendar(monthCalendarObj, targetElem) {
         const row = $("<tr>");
         week.forEach((day, colIndex) => {
             const col = $("<td>").html(
-                '<a href="/music/search?created_at=-' +
+                '<a href="'+(location.origin).split('/music/')[0]+'/music/search?created_at=-' +
                     `${`0${month + 1}`.slice(-2)}` +
                     "-" +
                     `${`0${day}`.slice(-2)}` +

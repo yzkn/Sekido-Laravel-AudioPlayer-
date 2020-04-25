@@ -105,7 +105,7 @@
                             @csrf
                             <input type="hidden" name="album" value="{{ $music->album }}">
                         </form>
-                        <a role="button" href="/music/{{ $music->id }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
+                        <a role="button" href="{{ url('music/' . $music->id) }}" class="btn btn-sm btn-outline-dark" target="_blank">Detail</a>
                     </span>
                 </li>
                 @endforeach

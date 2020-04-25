@@ -163,7 +163,7 @@
                         プレイリスト: {{ App\Playlist::where('user_id', '=', Auth::user()->id)->count() }}件
                     </p>
                 </div>
-                @if ('/music/search' === explode('?', str_replace(url('/'),"",\Request::fullUrl()))[0] )
+                @if ( strpos(explode('?', str_replace(url('/'),"",\Request::fullUrl()))[0], '/music/search') !== false )
                 <div class="p-4 mb-3">
                     <form method="POST" action="{{ url('music/search') }}" enctype="multipart/form-data">
                         @csrf

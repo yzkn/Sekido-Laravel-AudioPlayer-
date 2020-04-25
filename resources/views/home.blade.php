@@ -34,7 +34,7 @@
                     </div>
                     @can('admin-higher') {{-- 管理者権限以上に表示される --}}
                         <div class="card-body">
-                            <a href="{{ url('/music/upload') }}">{{ __('Upload') }}</a>
+                            <a href="{{ url('music/upload') }}">{{ __('Upload') }}</a>
                         </div>
                     @endcan
             </div>
