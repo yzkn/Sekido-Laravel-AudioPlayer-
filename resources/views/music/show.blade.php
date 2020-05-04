@@ -41,7 +41,12 @@
                             <div class="col-sm-4 my-2">{{ __('Original Artist') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->originalArtist ?? '' }}</div>
                             <div class="col-sm-4 my-2">{{ __('Playtime') }}</div>
-                            <div class="col-sm-8 my-2">{{ $music->playtime_seconds ?? '' }} sec</div>
+                            <div class="col-sm-8 my-2">
+                                {{ $music->playtime_seconds ? intdiv($music->playtime_seconds, 60) : '' }}:{{ $music->playtime_seconds ? ($music->playtime_seconds % 60) : '' }}
+                                <small>
+                                    ({{ $music->playtime_seconds ?? '' }} sec)
+                                </small>
+                            </div>
                             <div class="col-sm-4 my-2">{{ __('Related works') }}</div>
                             <div class="col-sm-8 my-2">{{ $music->related_works ?? '' }}</div>
                             <div class="col-sm-4 my-2">{{ __('Year') }}</div>
