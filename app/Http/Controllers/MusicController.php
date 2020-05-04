@@ -17,7 +17,10 @@ class MusicController extends Controller
         Log::debug(get_class($this) . ' ' . __FUNCTION__ . '()');
         Log::debug('User: ' . Auth::user());
 
-        return view('music.upload');
+        $playlists = Playlist::where('user_id', Auth::user()->id)->orderBy('title', 'asc')->get();
+        Log::debug('playlists: ' . $playlists);
+
+        return view('music.upload', ['playlists' => $playlists]);
     }
 
     /**
@@ -221,12 +224,45 @@ class MusicController extends Controller
                         $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0], 'UTF-8', $FROM_ENC) ?? '';
                         $music->originalArtist = '';
                         $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
-                        $music->related_works = '';
+                        $music->related_works = $request->related_works ?? '';
                         $music->title = mb_convert_encoding($tag['id3v2']['comments']['title'][0], 'UTF-8', $FROM_ENC) ?? '';
                         $music->track_num = $tag['id3v2']['comments']['track_number'][0] ?? '';
                         $music->year = $tag['id3v2']['comments']['recording_time'][0] ?? '';
                         $music->user_id = Auth::user()->id;
                         $music->save();
+
+                        $id = $music->id; // 挿入されたmusicのID
+                        $playlists = $request->playlists ?? [];
+                        unset($request['playlists']);
+                        if (count($playlists) > 0) {
+                            Log::debug('id: ' . print_r($id, true));
+                            // Log::debug('playlists: ' . print_r($playlists, true));
+                            // Log::debug('music->playlists: ' . print_r($music->playlists, true));
+
+                            if (0 === count($playlists)) {
+                                $new_playlist = array();
+                            } else {
+                                $new_playlist = (array) $playlists;
+                            }
+
+                            if (0 === count($music->playlists)) {
+                                $old_playlist = array();
+                            } else {
+                                foreach ($music->playlists as $value) {
+                                    $old_playlist[] = $value->id;
+                                }
+                            }
+
+                            Log::debug('old_playlist: ' . print_r($old_playlist, true));
+                            Log::debug('new_playlist: ' . print_r($new_playlist, true));
+
+                            $add = array_diff($new_playlist, $old_playlist);
+                            $remove = array_diff($old_playlist, $new_playlist);
+                            Log::debug('add: ' . print_r($add, true));
+                            Log::debug('remove: ' . print_r($remove, true));
+
+                            $music->savePlaylists($id, $add, $remove);
+                        }
                     }
                 }
             }
