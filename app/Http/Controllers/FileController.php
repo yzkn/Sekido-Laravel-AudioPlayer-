@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    public function covers($path)
+    //TODO
+    public function covers($id)
     {
         Log::debug(get_class($this).' '.__FUNCTION__.'()');
         Log::debug('User: '.Auth::user());
@@ -20,12 +21,7 @@ class FileController extends Controller
         $abspath = str_replace('/', DIRECTORY_SEPARATOR, Storage::path('covers').'/'.basename($path));
         $path = 'covers'.'/'.basename($path);
 
-        if('local'===config('filesystems.default', 'local')){
-            $is_valid = (Storage::exists($path) && $img_type = exif_imagetype($abspath));
-        } else if('s3'===config('filesystems.default', 'local')){
-            $tempurl = Storage::temporaryUrl($path, now()->addMinutes(1));
-            $is_valid = ($img_type = exif_imagetype($tempurl));
-        }
+        $is_valid = (Storage::exists($path) && $img_type = exif_imagetype($abspath));
 
         if($is_valid){
             $contents = Storage::get($path);
@@ -38,7 +34,8 @@ class FileController extends Controller
         }
     }
 
-    public function documents($path)
+    //TODO
+    public function documents($id)
     {
         Log::debug(get_class($this).' '.__FUNCTION__.'()');
         Log::debug('User: '.Auth::user());
@@ -60,13 +57,7 @@ class FileController extends Controller
             $response->header('Content-Type', 'application/pdf');
             return $response;
         }else if(Storage::exists($path)){
-
-            if('local'===config('filesystems.default', 'local')){
-                $is_valid = ($img_type = exif_imagetype($abspath));
-            } else if('s3'===config('filesystems.default', 'local')){
-                $tempurl = Storage::temporaryUrl($path, now()->addMinutes(1));
-                $is_valid = ($img_type = exif_imagetype($tempurl));
-            }
+            $is_valid = ($img_type = exif_imagetype($abspath));
             if($is_valid){
                 $contents = Storage::get($path);
                 // Log::debug('$contents: '.$contents);
@@ -81,7 +72,8 @@ class FileController extends Controller
         }
     }
 
-    public function musics($path)
+    //TODO
+    public function musics($id)
     {
         Log::debug(get_class($this).' '.__FUNCTION__.'()');
         Log::debug('User: '.Auth::user());

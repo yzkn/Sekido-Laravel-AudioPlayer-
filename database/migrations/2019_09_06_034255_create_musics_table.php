@@ -16,12 +16,15 @@ class CreateMusicsTable extends Migration
         Schema::create('musics', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('path')->unique();
+            $table->longText('audio_data')->nullable();
 
             $table->string('album')->nullable();
             $table->string('artist')->nullable();
             $table->string('bitrate')->nullable();
             $table->string('cover')->nullable();
+            $table->longText('cover_data')->nullable();
             $table->string('document')->nullable();
+            $table->longText('document_data')->nullable();
             $table->string('genre')->nullable();
             $table->string('originalArtist')->nullable();
             $table->string('playtime_seconds')->nullable();

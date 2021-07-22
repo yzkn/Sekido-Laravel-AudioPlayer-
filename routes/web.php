@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
     Route::resource('/playlist', 'PlaylistController');
 
     // アップロードされたファイル
-    Route::get('/c/{path}', 'FileController@covers');
-    Route::get('/d/{path}', 'FileController@documents');
-    Route::get('/m/{path}', 'FileController@musics');
+    Route::get('/c/{id}', 'FileController@covers');
+    Route::get('/d/{id}', 'FileController@documents');
+    Route::get('/m/{id}', 'FileController@musics');
 });

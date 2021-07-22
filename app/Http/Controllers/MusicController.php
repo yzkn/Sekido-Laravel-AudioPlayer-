@@ -193,16 +193,18 @@ class MusicController extends Controller
         ]);
 
         if ($request->hasFile('audios')) {
-            $image_path = '';
+            $base64imagedata = '';
             foreach ($request->file('audios') as $index => $audio) {
                 if ($audio->isValid()) {
                     if (strpos($audio->getMimeType(), 'image') === 0) {
                         Log::debug('audio: ' . print_r($audio, true));
-                        $stored = basename($audio->store('covers'));
-                        Log::debug('stored: ' . $stored);
+                        // $stored = basename($audio->store('covers'));
+                        $base64imagedata = base64_encode(file_get_contents($audio->getRealPath()));
+                        // Log::debug('stored: ' . $stored);
+                        Log::debug('base64imagedata: ' . $base64imagedata);
 
-                        $image_path = '/c/' . $stored;
-                        Log::debug('image_path: ' . $image_path);
+                        // $image_path = '/c/' . $stored;
+                        // Log::debug('image_path: ' . $image_path);
                         break;
                     }
                 }
@@ -211,8 +213,10 @@ class MusicController extends Controller
             foreach ($request->file('audios') as $index => $audio) {
                 if ($audio->isValid()) {
                     Log::debug('audio: ' . print_r($audio, true));
-                    $stored = basename($audio->store('musics'));
-                    Log::debug('stored: ' . $stored);
+                    // $stored = basename($audio->store('musics'));
+                    $base64audiodata = base64_encode(file_get_contents($audio->getRealPath()));
+                    // Log::debug('stored: ' . $stored);
+                    Log::debug('base64audiodata: ' . $base64audiodata);
 
                     if (strpos($audio->getMimeType(), 'audio') === 0) {
                         Log::debug('path: ' . $audio->path());
@@ -222,13 +226,16 @@ class MusicController extends Controller
 
                         $music = new Music;
 
-                        $music->path = '/m/' . $stored;
+                        // $music->path = '/m/' . $stored;
+                        $music->audio_data = $base64audiodata;
 
                         $music->album = mb_convert_encoding($tag['id3v2']['comments']['album'][0], 'UTF-8', $FROM_ENC) ?? '';
                         $music->artist = mb_convert_encoding($tag['id3v2']['comments']['artist'][0], 'UTF-8', $FROM_ENC) ?? '';
                         $music->bitrate = $tag['bitrate'] ?? '';
-                        $music->cover = $image_path ?? '';
-                        $music->document = '';
+                        // $music->cover = $image_path ?? '';
+                        $music->cover_data = $base64imagedata ?? '';
+                        // $music->document = '';
+                        $music->document_data = '';
                         $music->genre = mb_convert_encoding($tag['id3v2']['comments']['genre'][0], 'UTF-8', $FROM_ENC) ?? '';
                         $music->originalArtist = '';
                         $music->playtime_seconds = $tag['playtime_seconds'] ?? '';
@@ -353,12 +360,15 @@ class MusicController extends Controller
                 Log::debug('cover: ' . print_r($cover, true));
                 if ($cover->isValid([])) {
                     Log::debug('cover: ' . print_r($cover, true));
-                    $stored = basename($cover->store('covers'));
-                    Log::debug('stored: ' . $stored);
+                    // $stored = basename($cover->store('covers'));
+                    $base64imagedata = base64_encode(file_get_contents($audio->getRealPath()));
+                    // Log::debug('stored: ' . $stored);
+                    Log::debug('base64imagedata: ' . $base64imagedata);
 
-                    $path = $cover->path();
-                    Log::debug('path: ' . $path);
-                    $music->cover = '/c/' . $stored;
+                    // $path = $cover->path();
+                    // Log::debug('path: ' . $path);
+                    // $music->cover = '/c/' . $stored;
+                    $music->cover_data = $base64imagedata;
                 }
             }
 
@@ -367,9 +377,12 @@ class MusicController extends Controller
                 Log::debug('document: ' . print_r($document, true));
                 if ($document->isValid([])) {
                     Log::debug('document: ' . print_r($document, true));
-                    $stored = basename($document->store('documents'));
-                    Log::debug('stored: ' . $stored);
+                    // $stored = basename($document->store('documents'));
+                    $base64documentdata = base64_encode(file_get_contents($audio->getRealPath()));
+                    // Log::debug('stored: ' . $stored);
+                    Log::debug('base64documentdata: ' . $base64documentdata);
 
+                    //TODO
                     $path = $document->path();
                     Log::debug('$path: ' . $path);
                     $older_document_path = $music->document;
